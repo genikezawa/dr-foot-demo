@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dr. Foot</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial;
+    background: #fff;
+    color: #000;
+}
+
+.container {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* タイトル /
+.title {
+    font-size: 32px;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 8px;
+    margin-bottom: 24px;
+}
+
+/ ボタン（SwiftUI風） /
+.button {
+    display: block;
+    width: 100%;
+    padding: 16px 0;
+    margin-bottom: 16px;
+
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    color: #000;
+
+    border: 1px solid #000;
+    border-radius: 24px;
+}
+
+/ 押したとき /
+.button:active {
+    opacity: 0.5;
+}
+
+/ 戻る /
+.back {
+    font-size: 14px;
+    margin-bottom: 16px;
+    display: inline-block;
+}
+
+/ カード /
+.card {
+    border: 1px solid rgba(0,0,0,0.2);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+/ 小ラベル /
+.label {
+    font-size: 13px;
+    color: #666;
+}
+
+/ 非表示 */
+.hidden {
+    display: none;
+}
+
+img {
+    width: 100%;
+    border-radius: 12px;
+    margin-bottom: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- HOME -->
+<div id="home">
+    <div class="title">Dr. Foot</div>
+
+    <a class="button" onclick="showPage('data')">Your Foot Data</a>
+    <a class="button" href="footscanner://scan">Foot Scanner</a>
+    <a class="button" onclick="showPage('fitness')">Fitness</a>
+    <a class="button" onclick="showPage('shop')">Shoe Order</a>
+</div>
+
+<!-- DATA -->
+<div id="data" class="hidden">
+    <a class="back" onclick="showPage('home')">← Back</a>
+    <div class="title">Your Foot Data</div>
+
+    <div class="card">
+        <b>Left Foot</b><br><br>
+        Length: 25.3 cm<br>
+        Width: 9.8 cm<br>
+        Arch Height: 6.2 cm<br>
+        Instep: 24.1 cm<br>
+        Heel Width: 6.5 cm
+    </div>
+
+    <div class="card">
+        <b>Right Foot</b><br><br>
+        Length: 25.5 cm<br>
+        Width: 10.0 cm<br>
+        Arch Height: 6.4 cm<br>
+        Instep: 24.5 cm<br>
+        Heel Width: 6.7 cm
+    </div>
+</div>
+
+<!-- FITNESS -->
+<div id="fitness" class="hidden">
+    <a class="back" onclick="showPage('home')">← Back</a>
+    <div class="title">Fitness</div>
+
+    <div class="card">
+        <div class="label">Today Steps</div><br>
+        <div style="font-size:36px; font-weight:700;">7,842</div>
+        steps
+    </div>
+</div>
+
+<!-- SHOP -->
+<div id="shop" class="hidden">
+    <a class="back" onclick="showPage('home')">← Back</a>
+    <div class="title">Shoe Order</div>
+
+    <div class="card">
+        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff">
+        <img src="https://images.unsplash.com/photo-1521335629791-ce4aec67dd47">
+
+        <b>Kyoto Custom Shoes</b><br><br>
+
+        Your scanned foot data is used to create a perfectly fitted custom shoe.
+        Each pair is handcrafted by skilled artisans using precise 3D modeling technology.
+        Designed for comfort, balance, and long-term foot health.
+
+        <br><br>
+
+        <a class="button">この店で靴を注文する</a>
+    </div>
+</div>
+
+</div>
+
+<script>
+function showPage(page) {
+    const pages = ['home','data','fitness','shop'];
+    pages.forEach(p => document.getElementById(p).classList.add('hidden'));
+    document.getElementById(page).classList.remove('hidden');
+}
+</script>
+
+</body>
+</html>

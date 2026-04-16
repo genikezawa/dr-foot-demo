@@ -30,17 +30,21 @@ body {
 
 /* ボタン（SwiftUI風） */
 .button {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
     width: 100%;
-    padding: 16px 0;
+    padding: 20px 0;
     margin-bottom: 16px;
-
+    
     font-size: 20px;
     font-weight: 700;
     text-align: center;
     text-decoration: none;
     color: #000;
-
+    
     border: 1px solid #000;
     border-radius: 24px;
 }
@@ -48,6 +52,13 @@ body {
 /* 押したとき */
 .button:active {
     opacity: 0.5;
+}
+
+/* アイコン */
+.button img {
+width: 48px;
+height: 48px;
+margin-bottom: 10px;
 }
 
 /* 戻る */
@@ -93,10 +104,23 @@ img {
 <div id="home">
     <div class="title">Dr. Foot</div>
 
-    <a class="button" onclick="showPage('data')">Your Foot Data</a>
-    <a class="button" href="footscanner://scan">Foot Scanner</a>
-    <a class="button" onclick="showPage('fitness')">Fitness</a>
-    <a class="button" onclick="showPage('shop')">Shoe Order</a>
+    <a class="button" href="footscanner://scan">
+        <img src="footscanner.png">
+        Foot Scanner
+    </a>
+    <a class="button" onclick="showPage('data')">
+        <img src="your_foot_data.png">
+        Your Foot Data
+    </a>
+    <a class="button" onclick="showPage('fitness')">
+        <img src="fitness.png">
+        Fitness
+    </a>
+    <a class="button" onclick="showPage('shop')">
+        <img src="shoe_order.png">
+        Shoe Order
+    </a>
+
 </div>
 
 <!-- DATA -->

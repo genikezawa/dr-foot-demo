@@ -28,7 +28,35 @@ body {
     margin-bottom: 24px;
 }
 
-/* ボタン（SwiftUI風） */
+.button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px 0;
+    margin-bottom: 16px;
+    
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    color: #000;
+    
+    border: 1px solid #000;
+    border-radius: 24px;
+
+    /* アニメーション */
+    transition: transform 0.08s ease, opacity 0.08s ease;
+}
+
+/* 押した瞬間 */
+.button:active {
+    transform: scale(0.96);
+    opacity: 0.6;
+}
+    
+/* /* ボタン（SwiftUI風） */
 .button {
     display: flex;
     flex-direction: column;
@@ -47,12 +75,12 @@ body {
     
     border: 1px solid #000;
     border-radius: 24px;
-}
+} */
 
-/* 押したとき */
+/* /* 押したとき */
 .button:active {
     opacity: 0.5;
-}
+} */
 
 /* アイコン */
 .button img {

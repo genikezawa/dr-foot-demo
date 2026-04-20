@@ -28,7 +28,20 @@ body {
     margin-bottom: 24px;
 }
 
+
 .button {
+    padding: 8px 0;
+    font-size: 18px;
+}
+
+.button img {
+    width: 72px;
+    height: 72px;
+    margin-bottom: 4px;
+}
+
+
+/* .button {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -52,7 +65,19 @@ body {
     user-select: none;
     -webkit-user-select: none;
     -webkit-touch-callout: none;
-}
+} */
+
+/* アイコン */
+/* .button img {
+    width: 96px;
+    height: 96px;
+    margin-bottom: 5px;
+
+    /* 長押し無効 */
+    -webkit-user-drag: none;
+    -webkit-touch-callout: none;
+    user-select: none;
+} */
 
 /* 押した瞬間 */
 .button:active {
@@ -65,17 +90,25 @@ img {
     -webkit-touch-callout: none;
 }
 
-/* アイコン */
-.button img {
-    width: 96px;
-    height: 96px;
-    margin-bottom: 5px;
 
-    /* 長押し無効 */
-    -webkit-user-drag: none;
-    -webkit-touch-callout: none;
-    user-select: none;
+/* グリッド /
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
 }
+
+/ NFTだけ中央 */
+.full {
+    grid-column: span 2;
+    display: flex;
+    justify-content: center;
+}
+
+.full .button {
+    width: 60%;
+}
+
 
 /* 戻る */
 .back {
@@ -119,7 +152,43 @@ img {
 <div class="container">
 
 <!-- HOME -->
-<div id="home">
+
+<div class="title">Dr. Foot</div>
+
+<div class="grid">
+
+    <a class="button" onclick="showPage('data')">
+        <img src="your_foot_data.png">
+        Your Foot Data
+    </a>
+
+    <a class="button" href="footscanner://scan">
+        <img src="footscanner.png">
+        Foot Scanner
+    </a>
+
+    <a class="button" onclick="showPage('fitness')">
+        <img src="fitness.png">
+        Fitness
+    </a>
+
+    <a class="button" onclick="showPage('shop')">
+        <img src="shoe_order.png">
+        Shoe Order
+    </a>
+
+    <!-- NFT -->
+    <div class="full">
+        <a class="button">
+            <img src="nft.png">
+            NFT
+        </a>
+    </div>
+
+</div>
+
+    
+<!-- <div id="home">
 
     <div class="title">Dr. Foot</div>
 
@@ -140,7 +209,7 @@ img {
         Shoe Order
     </a>
 
-</div>
+</div> -->
 
 <!-- DATA -->
 <div id="data" class="hidden">

@@ -28,16 +28,36 @@ body {
     margin-bottom: 24px;
 }
 
-
 .button {
-    padding: 8px 0;
-    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    width: 100%;
+    aspect-ratio: 1 / 1; /* ← 正方形にする */
+    
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    color: #000;
+    
+    border: 1px solid #000;
+    border-radius: 20px;
+    
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    
+    transition: transform 0.08s ease;
 }
 
 .button img {
-    width: 72px;
-    height: 72px;
-    margin-bottom: 4px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 8px;
+    pointer-events: none;
 }
 
 
@@ -95,10 +115,10 @@ img {
 .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 14px;
 }
 
-/ NFTだけ中央 */
+/ NFT中央 /
 .full {
     grid-column: span 2;
     display: flex;
@@ -106,7 +126,8 @@ img {
 }
 
 .full .button {
-    width: 60%;
+    width: 70%;
+    aspect-ratio: 2 / 1; / 横長にする */
 }
 
 

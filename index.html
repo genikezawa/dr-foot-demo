@@ -54,6 +54,32 @@ body {your
     transition: transform 0.08s ease;
 }
 
+.button_shop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    width: 100%;
+    aspect-ratio: 2 / 1; /* ← 正方形にする */
+    
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    color: #000;
+    
+    border: 1px solid #000;
+    /* border-radius: 20px; */
+    border-radius: 12px;
+    
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    
+    transition: transform 0.08s ease;
+}
+
 .button img {
     width: 128px;
     height: 128px;
@@ -88,17 +114,6 @@ body {your
     -webkit-touch-callout: none;
 } */
 
-/* アイコン */
-/* .button img {
-    width: 96px;
-    height: 96px;
-    margin-bottom: 5px;
-
-    /* 長押し無効 */
-    -webkit-user-drag: none;
-    -webkit-touch-callout: none;
-    user-select: none;
-} */
 
 /* 押した瞬間 */
 .button:active {
@@ -287,7 +302,7 @@ img {
 
         <br><br>
 
-        <a class="button" href="https://easyorder-shoes.jp/order/">この店で靴を注文する</a>
+        <a class="shop_button" href="https://easyorder-shoes.jp/order/">この店で靴を注文する</a>
     </div>
 </div>
 

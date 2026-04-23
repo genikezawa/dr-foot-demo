@@ -117,7 +117,8 @@ body {your
 
 
 /* 押した瞬間 */
-.button:active {
+.button:active,
+.button.pressed {
     transform: scale(0.96);
     /* opacity: 0.6; */
 }
@@ -316,6 +317,20 @@ function showPage(page) {
     pages.forEach(p => document.getElementById(p).classList.add('hidden'));
     document.getElementById(page).classList.remove('hidden');
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.button').forEach(function(btn) {
+        btn.addEventListener('touchstart', function() {
+            this.classList.add('pressed');
+        }, { passive: true });
+        btn.addEventListener('touchend', function() {
+            this.classList.remove('pressed');
+        }, { passive: true });
+        btn.addEventListener('touchcancel', function() {
+            this.classList.remove('pressed');
+        }, { passive: true });
+    });
+});
 </script>
 
 </body>

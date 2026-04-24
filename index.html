@@ -2,286 +2,799 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dr. Foot</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Dr. Foot — スマホで足を測るだけ。あなただけの革靴が届く。</title>
 <style>
-body {your
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial;
-    background: #fff;
-    color: #000;
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #0a0a0a;
+  --white: #ffffff;
+  --gold: #c9a84c;
+  --gray: #f5f5f5;
+  --gray2: #e8e8e8;
+  --text-sub: #666;
+  --max-w: 440px;
 }
 
-.container {
-    max-width: 420px;
-    margin: 0 auto;
-    padding: 20px;
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans",
+               "Hiragino Kaku Gothic ProN", "YuGothic", sans-serif;
+  background: var(--white);
+  color: var(--black);
+  -webkit-font-smoothing: antialiased;
 }
 
-/* タイトル */
-.title {
-    font-size: 40px;
-    font-weight: 700;
-    text-align: center;
-    margin-top: 8px;
-    margin-bottom: 24px;
+img { -webkit-user-drag: none; user-select: none; }
+
+/* ── HEADER ── */
+.header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: rgba(10,10,10,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 13px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    
-    width: 100%;
-    aspect-ratio: 1 / 1; /* ← 正方形にする */
-    
-    font-size: 16px;
-    font-weight: 700;
-    text-align: center;
-    text-decoration: none;
-    color: #000;
-    
-    border: 1px solid #000;
-    border-radius: 12px;
-    
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-touch-callout: none;
-    
-    /* transition: transform 0.08s ease; */
-    transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
-
+.header-logo {
+  color: var(--white);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
 }
 
-.shop_button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    
-    width: 100%;
-    height: 50px;
-    
-    font-size: 20px;
-    font-weight: 700;
-    text-align: center;
-    text-decoration: none;
-    color: #000;
-    
-    border: 1px solid #000;
-    border-radius: 12px;
-    
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-touch-callout: none;
-    
-    /* transition: transform 0.08s ease; */
+.header-cta {
+  background: var(--gold);
+  color: var(--black);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 20px;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: opacity 0.15s;
+}
+.header-cta:active { opacity: 0.75; }
+
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
 }
 
-.button img {
-    width: 128px;
-    height: 128px;
-    /* margin-bottom: 8px; */
-    /* margin-bottom: 2px; */
-    pointer-events: none;
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('riverfield.jpg');
+  background-size: cover;
+  background-position: center 35%;
+  filter: brightness(0.38);
+}
+
+.hero-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, transparent 60%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  padding: 60px 24px 60px;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.hero-eyebrow {
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.hero-headline {
+  color: var(--white);
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.22;
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+}
+
+.hero-sub {
+  color: rgba(255,255,255,0.7);
+  font-size: 15px;
+  line-height: 1.75;
+  margin-bottom: 36px;
+}
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--gold);
+  color: var(--black);
+  font-size: 16px;
+  font-weight: 800;
+  padding: 17px 28px;
+  border-radius: 50px;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: opacity 0.15s;
+}
+.btn-primary:active { opacity: 0.8; }
+
+
+/* ── SECTION BASE ── */
+.section {
+  padding: 68px 24px;
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+
+.divider {
+  width: 40px;
+  height: 3px;
+  background: var(--gold);
+  border-radius: 2px;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 27px;
+  font-weight: 800;
+  line-height: 1.28;
+  letter-spacing: -0.01em;
+  margin-bottom: 14px;
+}
+
+.section-sub {
+  font-size: 15px;
+  color: var(--text-sub);
+  line-height: 1.75;
+  margin-bottom: 36px;
 }
 
 
-/* 押した瞬間 */
-.button:active,
-.button.pressed {
-    transform: scale(0.96);
-    /* opacity: 0.6; */
+/* ── PAIN ── */
+.pain-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-img {
-    -webkit-user-drag: none;
-    -webkit-touch-callout: none;
+.pain-item {
+  background: var(--gray);
+  border-radius: 14px;
+  padding: 15px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.pain-icon { font-size: 21px; flex-shrink: 0; }
+
+
+/* ── SOLUTION ── */
+.solution-wrap {
+  background: var(--black);
+  padding: 68px 0;
+}
+
+.solution-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.solution-wrap .section-title { color: var(--white); }
+.solution-wrap .section-sub   { color: rgba(255,255,255,0.55); }
+
+.solution-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  padding: 20px 22px;
+  margin-bottom: 12px;
+}
+
+.solution-card-title {
+  color: var(--gold);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.solution-card-text {
+  color: rgba(255,255,255,0.8);
+  font-size: 14px;
+  line-height: 1.7;
 }
 
 
-/* グリッド */
-.grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
+/* ── STEPS ── */
+.step-list {
+  display: flex;
+  flex-direction: column;
 }
 
-/* Shoe Order中央 */
-.full {
-    grid-column: span 2;
-    display: flex;
-    justify-content: center;
+.step-item {
+  display: flex;
+  gap: 20px;
+  padding: 18px 0;
+  position: relative;
 }
 
-.full .button {
-    width: 100%;
-    aspect-ratio: 2 / 1; /* 横長にする */
+.step-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 52px;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+}
+
+.step-num {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--black);
+  font-size: 17px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.step-title {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.step-desc {
+  font-size: 14px;
+  color: var(--text-sub);
+  line-height: 1.65;
 }
 
 
-/* 戻る */
-.back {
-    font-size: 14px;
-    margin-bottom: 16px;
-    display: inline-block;
+/* ── DIAGNOSIS DEMO ── */
+.diag-wrap {
+  background: var(--gray);
+  padding: 68px 0;
 }
 
-/* カード */
-.card {
-    border: 1px solid rgba(0,0,0,0.2);
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 16px;
+.diag-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 24px;
 }
 
-/* 小ラベル */
-.label {
-    font-size: 13px;
-    color: #666;
+.diag-card {
+  background: var(--white);
+  border-radius: 22px;
+  padding: 26px;
+  box-shadow: 0 6px 32px rgba(0,0,0,0.09);
 }
 
-/* 非表示 */
-.hidden {
-    display: none;
+.diag-header {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-sub);
+  letter-spacing: 0.04em;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--gray2);
 }
 
-/* カード内画像だけに適用 */
-.card img {
-    width: 100%;
-    border-radius: 12px;
-    margin-bottom: 10px;
+.diag-feet {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
 }
-    
+
+.diag-foot {
+  background: var(--gray);
+  border-radius: 14px;
+  padding: 14px 10px;
+  text-align: center;
+}
+
+.diag-foot-label {
+  font-size: 11px;
+  color: var(--text-sub);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.diag-foot-size {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.diag-foot-unit {
+  font-size: 13px;
+  color: var(--text-sub);
+  font-weight: 500;
+}
+
+.diag-alert {
+  background: #fff8e6;
+  border: 1px solid #f0d570;
+  border-radius: 11px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #7a5800;
+  margin-bottom: 14px;
+  line-height: 1.55;
+}
+
+.diag-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 11px 0;
+  border-bottom: 1px solid #f2f2f2;
+  font-size: 14px;
+}
+.diag-row:last-of-type { border-bottom: none; }
+
+.diag-key { color: var(--text-sub); font-weight: 500; }
+.diag-val { font-weight: 700; display: flex; align-items: center; gap: 6px; }
+
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+.badge-warn { background: #ffeaea; color: #cc3333; }
+.badge-ok   { background: #e6f5e6; color: #2a7a2a; }
+
+.diag-recommend {
+  margin-top: 20px;
+  background: linear-gradient(135deg, #0d0d0d 0%, #222 100%);
+  border-radius: 16px;
+  padding: 20px 22px;
+  color: var(--white);
+}
+
+.diag-recommend-label {
+  font-size: 11px;
+  color: var(--gold);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.diag-recommend-text {
+  font-size: 14px;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+
+.diag-recommend-size {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--gold);
+  letter-spacing: -0.02em;
+}
+
+.diag-note {
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+.diag-cta {
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gold);
+  color: var(--black);
+  font-size: 15px;
+  font-weight: 800;
+  padding: 15px 20px;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+.diag-cta:active { opacity: 0.8; }
+
+
+/* ── TRUST ── */
+.trust-list {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.trust-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.trust-icon {
+  width: 46px;
+  height: 46px;
+  background: var(--black);
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 21px;
+  flex-shrink: 0;
+}
+
+.trust-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.trust-desc {
+  font-size: 13px;
+  color: var(--text-sub);
+  line-height: 1.65;
+}
+
+
+/* ── FINAL CTA ── */
+.final-cta {
+  background: var(--black);
+  padding: 80px 24px;
+  text-align: center;
+}
+
+.final-cta-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+
+.final-cta-eyebrow {
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.final-cta-title {
+  color: var(--white);
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.28;
+  margin-bottom: 14px;
+  letter-spacing: -0.01em;
+}
+
+.final-cta-sub {
+  color: rgba(255,255,255,0.45);
+  font-size: 14px;
+  line-height: 1.75;
+  margin-bottom: 36px;
+}
+
+.btn-primary-lg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--gold);
+  color: var(--black);
+  font-size: 17px;
+  font-weight: 800;
+  padding: 18px 28px;
+  border-radius: 50px;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  margin-bottom: 14px;
+  transition: opacity 0.15s;
+}
+.btn-primary-lg:active { opacity: 0.8; }
+
+.btn-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: transparent;
+  color: rgba(255,255,255,0.55);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: 50px;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.18);
+  transition: opacity 0.15s;
+}
+.btn-secondary:active { opacity: 0.7; }
+
+.cta-note {
+  font-size: 12px;
+  color: rgba(255,255,255,0.25);
+  margin-top: 18px;
+  line-height: 1.6;
+}
+
+
+/* ── FOOTER ── */
+.footer {
+  background: #050505;
+  padding: 26px 24px;
+  text-align: center;
+  font-size: 12px;
+  color: rgba(255,255,255,0.18);
+}
+
+
+/* ── DESKTOP ── */
+@media (min-width: 500px) {
+  .hero-headline  { font-size: 40px; }
+  .final-cta-title { font-size: 34px; }
+}
 </style>
-
 </head>
 
 <body>
 
-<div class="container">
+<!-- HEADER -->
+<header class="header">
+  <div class="header-logo">Dr. Foot</div>
+  <a href="#download" class="header-cta">無料で試す</a>
+</header>
 
-<!-- HOME -->
-<div id="home">
-    
-<div class="title">Dr. Foot</div>
 
-<div class="grid">
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-gradient"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">iPhone × LiDAR × オーダー革靴</div>
+    <h1 class="hero-headline">靴が痛い。<br>それは足の形を<br>知らないからです。</h1>
+    <p class="hero-sub">
+      スマホで足をスキャンするだけ。<br>
+      正確な寸法と足型診断をもとに、<br>
+      あなただけの革靴を職人が仕立てます。
+    </p>
+    <a href="#download" class="btn-primary">
+      <span>📱</span><span>無料アプリをダウンロード</span>
+    </a>
+  </div>
+</section>
 
-    <a class="button" onclick="showPage('data')">
-        <img src="your_foot_data2.png">
-        Your Foot Data
+
+<!-- ── PAIN ── -->
+<section class="section">
+  <div class="section-label">こんな悩みありませんか？</div>
+  <div class="divider"></div>
+  <h2 class="section-title">革靴の痛み、<br>あきらめていませんか。</h2>
+  <p class="section-sub">既製靴が合わないのは、あなたの足が特別なわけでも、悪いわけでもありません。ただ、足の形を無視した靴を履いているだけです。</p>
+
+  <div class="pain-list">
+    <div class="pain-item"><span class="pain-icon">😣</span><span>夕方になると右足だけ痛くなる</span></div>
+    <div class="pain-item"><span class="pain-icon">👟</span><span>幅がきつくて親指が曲がってきた気がする</span></div>
+    <div class="pain-item"><span class="pain-icon">🔄</span><span>左右でサイズが違い、どちらかが緩い</span></div>
+    <div class="pain-item"><span class="pain-icon">🚶</span><span>長時間歩くと足・腰が疲れやすい</span></div>
+    <div class="pain-item"><span class="pain-icon">🏬</span><span>百貨店のオーダーは面倒で行けない</span></div>
+  </div>
+</section>
+
+
+<!-- ── SOLUTION ── -->
+<section class="solution-wrap">
+  <div class="solution-inner">
+    <div class="section-label">Dr. Footの解決策</div>
+    <div class="divider"></div>
+    <h2 class="section-title">店に行かずに、<br>あなたの足に合う<br>オーダー革靴を作る。</h2>
+    <p class="section-sub">iPhoneのLiDARセンサーが足の形状を精密に3Dスキャン。AIが足の特徴を分析し、職人があなただけの革靴を仕立てます。</p>
+
+    <div class="solution-card">
+      <div class="solution-card-title">📐 精密3Dスキャン</div>
+      <p class="solution-card-text">Apple LiDARセンサーで足の全形状を3D復元。足長・足幅・甲高・左右差を正確に計測します。</p>
+    </div>
+    <div class="solution-card">
+      <div class="solution-card-title">🤖 AI足型診断</div>
+      <p class="solution-card-text">計測データをもとにAIがあなたの足の特徴を診断。「幅広」「甲高」「左右差」など、既製靴で起きている問題の原因を数値で可視化します。</p>
+    </div>
+    <div class="solution-card">
+      <div class="solution-card-title">👞 職人によるオーダー製作</div>
+      <p class="solution-card-text">3D足型データをもとに、提携する熟練職人があなたの足にフィットする革靴を一足ずつ製作します。</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── HOW IT WORKS ── -->
+<section class="section">
+  <div class="section-label">使い方</div>
+  <div class="divider"></div>
+  <h2 class="section-title">たった3ステップ、<br>自宅で完結</h2>
+  <p class="section-sub">店舗に行く必要はありません。iPhoneさえあれば始められます。</p>
+
+  <div class="step-list">
+    <div class="step-item">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">足をスキャン（約10分）</div>
+        <p class="step-desc">アプリの音声ガイドに従って左右の足を順番にスキャン。椅子に座ってiPhoneをかざすだけです。</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">診断結果を確認</div>
+        <p class="step-desc">足長・足幅・左右差など詳細な計測値と、AI診断コメントが表示されます。「なぜ靴が痛かったのか」が数値でわかります。</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">革靴を注文</div>
+        <p class="step-desc">靴の種類・色を選んで注文。スキャンデータをもとに職人が製作し、自宅にお届けします。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── DIAGNOSIS DEMO ── -->
+<section class="diag-wrap">
+  <div class="diag-inner">
+    <div class="section-label">診断サンプル</div>
+    <div class="divider"></div>
+    <h2 class="section-title">こんな診断結果が<br>届きます</h2>
+    <p class="section-sub" style="margin-bottom:28px">数値で「見えなかった問題」が一目でわかります。</p>
+
+    <div class="diag-card">
+      <div class="diag-header">📊 足型診断レポート（サンプル）</div>
+
+      <div class="diag-feet">
+        <div class="diag-foot">
+          <div class="diag-foot-label">右足</div>
+          <div class="diag-foot-size">26.2<span class="diag-foot-unit">cm</span></div>
+        </div>
+        <div class="diag-foot">
+          <div class="diag-foot-label">左足</div>
+          <div class="diag-foot-size">26.7<span class="diag-foot-unit">cm</span></div>
+        </div>
+      </div>
+
+      <div class="diag-alert">
+        ⚠️ <b>左右差 5mm</b> — 右足に合わせると左が緩く、左に合わせると右がきつくなります。これが「片足だけ痛い」原因です。
+      </div>
+
+      <div class="diag-row">
+        <span class="diag-key">足幅</span>
+        <span class="diag-val">標準より +9mm <span class="badge badge-warn">幅広</span></span>
+      </div>
+      <div class="diag-row">
+        <span class="diag-key">甲の高さ</span>
+        <span class="diag-val">やや高め <span class="badge badge-warn">甲高</span></span>
+      </div>
+      <div class="diag-row">
+        <span class="diag-key">かかと幅</span>
+        <span class="diag-val">標準 <span class="badge badge-ok">標準</span></span>
+      </div>
+
+      <div class="diag-recommend">
+        <div class="diag-recommend-label">推奨オーダー仕様</div>
+        <div class="diag-recommend-text">左右非対称・幅広EE・甲高設計</div>
+        <div class="diag-recommend-size">26.5cm / EE幅</div>
+        <p class="diag-note">※ このサイズの組み合わせは既製靴には存在しません。オーダーメイドだから実現できます。</p>
+      </div>
+
+      <a href="#download" class="diag-cta">自分の足を診断してみる →</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── TRUST ── -->
+<section class="section">
+  <div class="section-label">なぜ信頼できるか</div>
+  <div class="divider"></div>
+  <h2 class="section-title">最先端の技術と<br>職人の技の融合</h2>
+  <p class="section-sub" style="margin-bottom:32px"> </p>
+
+  <div class="trust-list">
+    <div class="trust-item">
+      <div class="trust-icon">📡</div>
+      <div class="trust-body">
+        <div class="trust-title">Apple LiDARセンサー</div>
+        <p class="trust-desc">iPhone 12 Pro以降に搭載されたLiDAR技術。建築・医療分野でも活用される精密センサーで足の3D形状を復元します。</p>
+      </div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">🧠</div>
+      <div class="trust-body">
+        <div class="trust-title">AI点群再構成モデル</div>
+        <p class="trust-desc">スキャンデータから足の正確な3D形状を再構成する独自AIアルゴリズムを開発。測定精度を最大化します。</p>
+      </div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">👞</div>
+      <div class="trust-body">
+        <div class="trust-title">熟練職人によるハンドメイド</div>
+        <p class="trust-desc">3D足型データから製作した木型を使い、職人が一足ずつ丁寧に仕上げます。製作価格は40,000円前後。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── FINAL CTA ── -->
+<section class="final-cta" id="download">
+  <div class="final-cta-inner">
+    <div class="final-cta-eyebrow">今すぐ始める</div>
+    <h2 class="final-cta-title">まず、自分の足を<br>知ることから始めよう。</h2>
+    <p class="final-cta-sub">
+      アプリは無料です。スキャンと診断だけでも、今まで知らなかった自分の足の形がわかります。
+    </p>
+
+    <a href="#" class="btn-primary-lg">
+      <span>🍎</span><span>App Storeからダウンロード</span>
     </a>
 
-    <a class="button" href="footscanner://scan">
-        <img src="footscanner.png">
-        Foot Scanner
+    <a href="https://easyorder-shoes.jp/order/" class="btn-secondary" target="_blank" rel="noopener">
+      <span>提携靴店でオーダーする</span><span>→</span>
     </a>
 
-    <a class="button" onclick="showPage('fitness')">
-        <img src="fitness.png">
-        Fitness
-    </a>
+    <p class="cta-note">
+      ※ iPhone 12 Pro以降（LiDAR搭載モデル）が必要です<br>
+      ※ アプリは現在準備中です
+    </p>
+  </div>
+</section>
 
-    <a class="button">
-        <img src="nft.png">
-        NFT
-    </a>
 
-    <!-- SHoe Order -->
-    <div class="full">
-        <a class="button" onclick="showPage('shop')">
-            <img src="shoe_order.png">
-            Shoe Order
-        </a>
-    </div>
-
-</div>
-</div> 
-
-<!-- DATA -->
-<div id="data" class="hidden">
-    <a class="back" onclick="showPage('home')">← Back</a>
-    <div class="title">Your Foot Data</div>
-
-    <div class="card">
-        <b>Left Foot</b><br><br>
-        Length: 25.3 cm<br>
-        Width: 9.8 cm<br>
-        Arch Height: 6.2 cm<br>
-        Instep: 24.1 cm<br>
-        Heel Width: 6.5 cm
-    </div>
-
-    <div class="card">
-        <b>Right Foot</b><br><br>
-        Length: 25.5 cm<br>
-        Width: 10.0 cm<br>
-        Arch Height: 6.4 cm<br>
-        Instep: 24.5 cm<br>
-        Heel Width: 6.7 cm
-    </div>
-</div>
-
-<!-- FITNESS -->
-<div id="fitness" class="hidden">
-    <a class="back" onclick="showPage('home')">← Back</a>
-    <div class="title">Fitness</div>
-
-    <div class="card">
-        <div class="label">Today Steps</div><br>
-        <div style="font-size:36px; font-weight:700;">7,842</div>
-        steps
-    </div>
-</div>
-
-<!-- SHOP -->
-<div id="shop" class="hidden">
-    <a class="back" onclick="showPage('home')">← Back</a>
-    <div class="title">Shoe Order</div>
-
-    <div class="card">
-        <img src="riverfield.jpg">
-        <img src="rfbanner.jpg">
-
-        <b>Kyoto Custom Shoes</b><br><br>
-
-        Your scanned foot data is used to create a perfectly fitted custom shoe.
-        Each pair is handcrafted by skilled artisans using precise 3D modeling technology.
-        Designed for comfort, balance, and long-term foot health.
-
-        <br><br>
-
-        <a class="shop_button" margin="20px" href="https://easyorder-shoes.jp/order/">この店で靴を注文する</a>
-    </div>
-</div>
-
-</div>
-
-    
-<script>
-function showPage(page) {
-    const pages = ['home','data','fitness','shop'];
-    pages.forEach(p => document.getElementById(p).classList.add('hidden'));
-    document.getElementById(page).classList.remove('hidden');
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.button').forEach(function(btn) {
-        btn.addEventListener('touchstart', function() {
-            this.classList.add('pressed');
-        }, { passive: true });
-        btn.addEventListener('touchend', function() {
-            this.classList.remove('pressed');
-        }, { passive: true });
-        btn.addEventListener('touchcancel', function() {
-            this.classList.remove('pressed');
-        }, { passive: true });
-    });
-});
-</script>
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <p>© 2026 Dr. Foot. All rights reserved.</p>
+</footer>
 
 </body>
 </html>

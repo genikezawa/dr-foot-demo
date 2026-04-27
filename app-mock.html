@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Foot Scanner — App UI Mock</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black:    #0a0a0a;
+  --white:    #ffffff;
+  --gold:     #c9a84c;
+  --sys-bg:   #f2f2f7;
+  --gray:     #f5f5f5;
+  --gray2:    #e8e8e8;
+  --blue:     #007aff;
+  --sub:      #8e8e93;
+  --border:   rgba(0,0,0,0.13);
+  --max-w:    390px;
+}
+
+html { height: 100%; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans",
+               "Hiragino Kaku Gothic ProN", "YuGothic", sans-serif;
+  background: var(--sys-bg);
+  color: var(--black);
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── PHONE SHELL ── */
+.shell {
+  width: 100%;
+  max-width: var(--max-w);
+  min-height: 100svh;
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* ── NAV BAR ── */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 0.5px solid var(--gray2);
+  /* simulate iOS status bar + nav bar height */
+  padding: 50px 16px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.nav-edit {
+  font-size: 17px;
+  color: var(--blue);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 4px 0;
+}
+
+/* ── SCROLL CONTENT ── */
+.content {
+  flex: 1;
+  padding: 20px 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+}
+
+/* App title — largeTitle + bold */
+.app-title {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-align: center;
+  padding: 4px 0 4px;
+}
+
+/* ── SCAN BUTTONS ── */
+.btn-scan {
+  display: block;
+  width: 100%;
+  padding: 15px 20px;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--black);
+  background: var(--white);
+  border: 1.5px solid var(--black);
+  border-radius: 24px;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: center;
+  transition: background 0.12s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-scan:active { background: rgba(0,0,0,0.07); }
+
+/* ── SCAN PREVIEW AREA ── */
+.preview {
+  height: 140px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.preview-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+}
+
+.preview-icon {
+  opacity: 0.22;
+}
+
+.preview-text {
+  font-size: 13px;
+  color: var(--sub);
+}
+
+/* ── EXPORT BUTTON ── */
+.btn-export {
+  display: block;
+  width: 100%;
+  padding: 15px 20px;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--blue);
+  background: rgba(0,122,255,0.06);
+  border: 1px solid rgba(0,122,255,0.3);
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: center;
+  margin-top: 4px;
+  transition: background 0.12s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-export:active { background: rgba(0,122,255,0.14); }
+
+/* ── SEPARATOR ── */
+.sep {
+  height: 8px;
+  background: var(--sys-bg);
+  margin: 6px -16px 2px;
+}
+
+/* ── DIAGNOSIS BUTTON ── */
+.btn-diagnosis {
+  display: block;
+  width: 100%;
+  padding: 16px 20px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--black);
+  background: var(--white);
+  border: 1.5px solid var(--black);
+  border-radius: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: center;
+  transition: background 0.12s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-diagnosis:active { background: rgba(0,0,0,0.06); }
+
+/* ── ORDER SHOES BUTTON ── */
+.btn-order {
+  display: block;
+  width: 100%;
+  padding: 18px 20px;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--black);
+  background: var(--gold);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: center;
+  letter-spacing: 0.02em;
+  transition: opacity 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-order:active { opacity: 0.8; }
+
+/* ── NEW BADGE (design note) ── */
+.new-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: #ff3b30;
+  color: #fff;
+  border-radius: 4px;
+  padding: 1px 5px;
+  vertical-align: middle;
+  margin-left: 6px;
+  position: relative;
+  top: -1px;
+}
+
+/* ── DESIGN NOTE BANNER ── */
+.note-banner {
+  background: #fff8e6;
+  border: 1px solid #f0d570;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #7a5800;
+  line-height: 1.6;
+  margin-bottom: 2px;
+}
+
+/* bottom safe area */
+.safe-bottom { height: 40px; }
+
+/* ── DESKTOP: show as phone mockup ── */
+@media (min-width: 500px) {
+  body {
+    align-items: center;
+    padding: 48px 0;
+  }
+  .shell {
+    min-height: auto;
+    border-radius: 50px;
+    box-shadow:
+      0 0 0 10px #1a1a1a,
+      0 0 0 11px #3a3a3a,
+      0 40px 100px rgba(0,0,0,0.35);
+    overflow: hidden;
+    height: 844px; /* iPhone 14 logical height */
+  }
+  .content {
+    overflow-y: scroll;
+  }
+  /* Simulate notch on desktop */
+  .nav::before {
+    content: '';
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 30px;
+    background: #1a1a1a;
+    border-radius: 0 0 18px 18px;
+    z-index: 30;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- NAV BAR -->
+  <nav class="nav">
+    <button class="nav-edit">Edit</button>
+  </nav>
+
+  <!-- SCROLL CONTENT -->
+  <div class="content">
+
+    <!-- Design note (remove before delivery to designer) -->
+    <div class="note-banner">
+      📐 <strong>UI Mock</strong> — ContentView.swift を再現。
+      下部の <strong>Diagnosis</strong> / <strong>Order Shoes</strong> が新規追加ボタン。
+      LPと統一するデザインの叩き台としてご使用ください。
+    </div>
+
+    <!-- App title: largeTitle + bold, centered -->
+    <h1 class="app-title">Foot Scanner</h1>
+
+    <!-- Scan Right -->
+    <button class="btn-scan">Scan Right</button>
+
+    <!-- Right preview -->
+    <div class="preview">
+      <div class="preview-inner">
+        <svg class="preview-icon" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- 3D wireframe cube to suggest 3D scan -->
+          <rect x="8" y="16" width="24" height="20" rx="2" stroke="#000" stroke-width="1.5" fill="none"/>
+          <rect x="16" y="8" width="24" height="20" rx="2" stroke="#000" stroke-width="1.5" fill="none"/>
+          <line x1="8" y1="16" x2="16" y2="8" stroke="#000" stroke-width="1.5"/>
+          <line x1="32" y1="16" x2="40" y2="8" stroke="#000" stroke-width="1.5"/>
+          <line x1="8" y1="36" x2="16" y2="28" stroke="#000" stroke-width="1.5"/>
+          <line x1="32" y1="36" x2="40" y2="28" stroke="#000" stroke-width="1.5"/>
+        </svg>
+        <span class="preview-text">No Right Scan</span>
+      </div>
+    </div>
+
+    <!-- Scan Left -->
+    <button class="btn-scan">Scan Left</button>
+
+    <!-- Left preview -->
+    <div class="preview">
+      <div class="preview-inner">
+        <svg class="preview-icon" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="16" width="24" height="20" rx="2" stroke="#000" stroke-width="1.5" fill="none"/>
+          <rect x="16" y="8" width="24" height="20" rx="2" stroke="#000" stroke-width="1.5" fill="none"/>
+          <line x1="8" y1="16" x2="16" y2="8" stroke="#000" stroke-width="1.5"/>
+          <line x1="32" y1="16" x2="40" y2="8" stroke="#000" stroke-width="1.5"/>
+          <line x1="8" y1="36" x2="16" y2="28" stroke="#000" stroke-width="1.5"/>
+          <line x1="32" y1="36" x2="40" y2="28" stroke="#000" stroke-width="1.5"/>
+        </svg>
+        <span class="preview-text">No Left Scan</span>
+      </div>
+    </div>
+
+    <!-- Export Models -->
+    <button class="btn-export">Export Models</button>
+
+    <!-- Visual separator — separates scan section from diagnosis/order section -->
+    <div class="sep"></div>
+
+    <!-- Diagnosis (NEW) -->
+    <button class="btn-diagnosis">
+      Diagnosis <span class="new-badge">New</span>
+    </button>
+
+    <!-- Order Shoes (NEW) — gold, matches LP primary CTA color -->
+    <button class="btn-order">
+      Order Shoes → <span class="new-badge">New</span>
+    </button>
+
+    <div class="safe-bottom"></div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>注文フォーム モック — Dr. Foot × リバーフィールド</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── DEMO BAR ── */
+.demo-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #1a1a1a;
+  color: #fff;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+.demo-bar strong { color: #f0c060; letter-spacing: .03em; }
+.toggle-wrap { display: flex; align-items: center; gap: 8px; }
+.toggle-label { cursor: pointer; display: flex; align-items: center; gap: 6px; }
+.toggle-label input[type="checkbox"] { display: none; }
+.switch {
+  width: 40px; height: 22px; background: #555; border-radius: 11px;
+  position: relative; transition: background .2s; cursor: pointer; flex-shrink: 0;
+}
+.switch::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 18px; height: 18px; background: #fff; border-radius: 50%;
+  transition: transform .2s;
+}
+.toggle-label input:checked + .switch { background: #4a90d9; }
+.toggle-label input:checked + .switch::after { transform: translateX(18px); }
+.mode-lbl { font-weight: 700; color: #aaa; }
+.mode-lbl.app { color: #7ac8ff; }
+
+/* ── PAGE ── */
+body {
+  background: #e0ddd8;
+  font-family: "ヒラギノ角ゴ ProN", "Hiragino Kaku Gothic ProN", "游ゴシック", YuGothic,
+               "メイリオ", Meiryo, sans-serif;
+  font-size: 14px;
+  color: #333;
+  line-height: 1.5;
+}
+.page-wrap {
+  max-width: 580px;
+  margin: 0 auto;
+  background: #fff;
+  padding-bottom: 40px;
+}
+
+/* ── PRODUCT HEADER ── */
+.prod-head {
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid #ccc;
+}
+.prod-head .shop { font-size: 11px; color: #888; margin-bottom: 4px; letter-spacing: .06em; }
+.prod-head h1 { font-size: 18px; font-weight: bold; margin-bottom: 3px; }
+.prod-head .price { font-size: 13px; color: #666; }
+
+/* ── FORM WRAPPER ── */
+.fwrap { padding: 0 20px; }
+
+/* ── Dr. Foot BANNER (app only) ── */
+.drfoot-banner {
+  display: none;
+  background: #eef2f7;
+  border: 1px solid #b0c8e4;
+  border-left: 4px solid #4a90d9;
+  border-radius: 4px;
+  padding: 11px 14px;
+  margin: 16px 0 0;
+  font-size: 13px;
+}
+.drfoot-banner.on { display: block; }
+.drfoot-banner .head {
+  font-weight: 700; color: #1e2d45; font-size: 12px; letter-spacing: .05em;
+  margin-bottom: 8px; display: flex; align-items: center; gap: 5px;
+}
+.drfoot-banner .row { display: flex; flex-wrap: wrap; gap: 4px 16px; color: #1e2d45; }
+.drfoot-banner .kv { display: flex; gap: 5px; align-items: baseline; }
+.drfoot-banner .k { font-size: 11px; color: #6a8aaa; }
+.drfoot-banner .v { font-weight: 700; }
+.drfoot-banner .v.warn { color: #c0392b; }
+.drfoot-banner .sid {
+  margin-top: 7px; padding-top: 7px; border-top: 1px solid #c0d4e8;
+  font-size: 11px; color: #8aaccc; letter-spacing: .04em;
+}
+
+/* ── MAIN FORM TABLE ── */
+.ftbl {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 14px;
+}
+.ftbl td {
+  border: 1px solid #c8c8c8;
+  vertical-align: middle;
+  padding: 7px 10px;
+}
+.ftbl .lbl {
+  background: #f5f3f0;
+  width: 168px;
+  text-align: right;
+  font-size: 13px;
+  padding-right: 9px;
+  vertical-align: middle;
+  white-space: normal;
+  line-height: 1.4;
+}
+.ftbl .inp { background: #fff; }
+
+/* Required badge */
+.req {
+  display: inline-block;
+  background: #cc1111;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 2px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+/* Inputs */
+input[type="text"], input[type="email"], input[type="tel"],
+select, textarea {
+  font-family: inherit;
+  font-size: 13px;
+  padding: 4px 6px;
+  border: 1px solid #bbb;
+  border-radius: 0;
+  background: #fff;
+  color: #333;
+  -webkit-appearance: none;
+}
+input[type="text"]:focus, input[type="email"]:focus,
+input[type="tel"]:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #5599cc;
+}
+select { padding-right: 22px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 6px center; }
+input.autofill, select.autofill {
+  background: #e4f0ff !important;
+  border-color: #4a90d9 !important;
+  color: #0a3060 !important;
+  font-weight: 700 !important;
+}
+.autofill-note { font-size: 11px; color: #4a90d9; margin-top: 3px; display: none; }
+textarea { width: 100%; resize: vertical; min-height: 100px; display: block; }
+
+/* Radio inline */
+.ri label { margin-right: 14px; cursor: pointer; font-size: 13px; }
+.ri input[type="radio"] { margin-right: 3px; accent-color: #4a90d9; }
+
+/* Field note */
+.fnote { font-size: 11px; color: #777; margin-top: 3px; }
+
+/* Address */
+.addr-city-wrap { margin-bottom: 5px; }
+.addr-city-wrap select { width: 100%; }
+
+/* ── ACCORDION BUTTONS ── */
+.acc-btn {
+  display: block;
+  width: 100%;
+  padding: 9px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: center;
+  border: 1px solid #bbb;
+  border-top: none;
+  letter-spacing: .03em;
+}
+.acc-btn.opt-btn { background: #e8e8e8; color: #333; }
+.acc-btn.opt-btn:hover { background: #ddd; }
+.acc-btn.scan-btn { background: #e8f0fb; border-color: #7799cc; color: #223355; }
+.acc-btn.scan-btn:hover { background: #dde8f5; }
+.acc-btn .arrow { margin-left: 6px; display: inline-block; transition: transform .2s; }
+.acc-btn.open .arrow { transform: rotate(180deg); }
+
+/* ── OPTIONS TABLE ── */
+.opt-wrap {
+  display: none;
+  border: 1px solid #bbb;
+  border-top: none;
+}
+.opt-wrap.open { display: block; }
+.opt-tbl { width: 100%; border-collapse: collapse; }
+.opt-tbl td {
+  border: 1px solid #c8c8c8;
+  padding: 8px 10px;
+  font-size: 12px;
+  vertical-align: top;
+  line-height: 1.65;
+}
+.opt-tbl .on { font-weight: 700; font-size: 13px; width: 110px; }
+.opt-tbl .op { color: #555; width: 120px; font-size: 12px; white-space: pre-line; }
+.opt-tbl .od { color: #444; }
+
+/* ── SCAN / Dr.FOOT SECTION ── */
+.scan-wrap {
+  display: none;
+  border: 1px solid #7799cc;
+  border-top: none;
+  background: #f8faff;
+  padding: 14px 16px;
+}
+.scan-wrap.open { display: block; }
+.scan-radio-row { margin-bottom: 12px; }
+.scan-detail-tbl { width: 100%; border-collapse: collapse; margin-bottom: 14px; }
+.scan-detail-tbl td { border: 1px solid #c0cce0; padding: 8px 10px; font-size: 12px; vertical-align: top; line-height: 1.7; }
+.scan-detail-tbl .sl { background: #edf1f7; width: 80px; font-weight: 700; font-size: 12px; }
+.scan-app-block { text-align: center; margin: 10px 0 14px; }
+.scan-app-block .app-link-text { font-size: 13px; margin-bottom: 8px; line-height: 1.6; }
+.app-store-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: #000; color: #fff; border-radius: 6px; padding: 7px 16px;
+  font-size: 13px; text-decoration: none; font-weight: 700; cursor: pointer;
+  border: none; font-family: inherit;
+}
+.scan-divider { border: none; border-top: 1px solid #b8c8dc; margin: 12px 0; }
+.scan-upload-head { font-size: 15px; font-weight: 700; text-align: center; margin-bottom: 12px; color: #223355; }
+.file-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 13px; }
+.file-row label { min-width: 30px; }
+.file-btn {
+  background: #fff; border: 1px solid #999; border-radius: 2px;
+  padding: 3px 10px; font-size: 12px; cursor: pointer; font-family: inherit;
+}
+.file-none { color: #888; font-size: 12px; }
+
+/* ZIP upload (app mode) */
+.zip-upload { display: none; margin-top: 8px; }
+.zip-upload.on { display: block; }
+.zip-inner {
+  border: 2px dashed #9ab8d8;
+  border-radius: 5px;
+  background: #f4f8ff;
+  padding: 18px 16px;
+  text-align: center;
+}
+.zip-inner .zt { font-size: 13px; font-weight: 700; color: #1e2d45; margin-bottom: 5px; }
+.zip-inner .zs { font-size: 12px; color: #5a7a9a; line-height: 1.65; margin-bottom: 10px; }
+.zip-inner .zbtn {
+  background: #1e2d45; color: #fff; border: none; border-radius: 4px;
+  padding: 7px 20px; font-size: 13px; font-weight: 700;
+  font-family: inherit; cursor: pointer;
+}
+.zip-ok { font-size: 12px; color: #2a7a3a; font-weight: 700; margin-top: 6px; display: none; }
+
+/* ── SUBMIT ── */
+.submit-area { text-align: center; margin-top: 20px; }
+.confirm-wrap {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 12px; color: #555; margin-bottom: 14px; text-align: left;
+}
+.confirm-wrap input[type="checkbox"] { margin-top: 2px; flex-shrink: 0; }
+.btn-submit {
+  background: #555; color: #fff; border: none;
+  padding: 10px 50px; font-size: 15px; font-weight: 700;
+  font-family: inherit; cursor: pointer; border-radius: 2px;
+  letter-spacing: .08em;
+}
+.btn-submit:hover { background: #333; }
+
+/* ── RESPONSIVE ── */
+@media (min-width: 620px) {
+  .page-wrap { margin: 20px auto; border: 1px solid #bbb; }
+}
+</style>
+</head>
+<body>
+
+<!-- DEMO BAR -->
+<div class="demo-bar">
+  <strong>📐 MOCK</strong>
+  <span style="color:#777">表示モード:</span>
+  <div class="toggle-wrap">
+    <span class="mode-lbl" id="lbl-web">直接アクセス</span>
+    <label class="toggle-label">
+      <input type="checkbox" id="mode-toggle">
+      <span class="switch"></span>
+    </label>
+    <span class="mode-lbl app" id="lbl-app" style="opacity:.4">アプリ経由</span>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <!-- PRODUCT HEADER -->
+  <div class="prod-head">
+    <div class="shop">Riverfield / 八幡靴</div>
+    <h1>ペッカリー：ブラック</h1>
+    <div class="price">¥96,000（税込 ¥105,600）</div>
+  </div>
+
+  <div class="fwrap">
+
+    <!-- ① Dr. Foot スキャン情報バナー（アプリ経由のみ） -->
+    <div class="drfoot-banner" id="drfoot-banner">
+      <div class="head">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4a90d9" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1" fill="#4a90d9" stroke="none"/></svg>
+        Dr. Foot スキャン結果
+      </div>
+      <div class="row">
+        <div class="kv"><span class="k">右足長</span><span class="v">26.2 cm</span></div>
+        <div class="kv"><span class="k">左足長</span><span class="v warn">26.7 cm</span><span style="font-size:11px;color:#c0392b;margin-left:2px">（差 5mm）</span></div>
+        <div class="kv"><span class="k">推奨サイズ</span><span class="v">26.5 cm</span></div>
+        <div class="kv"><span class="k">推奨ワイズ</span><span class="v">EE</span></div>
+        <div class="kv"><span class="k">甲</span><span class="v">高め</span></div>
+      </div>
+      <div class="sid">スキャンID: a3f8c2d1</div>
+    </div>
+
+    <!-- MAIN FORM TABLE -->
+    <table class="ftbl">
+      <tr>
+        <td class="lbl"><span class="req">必須</span>お名前</td>
+        <td class="inp"><input type="text" placeholder="山田 太郎" style="width:100%"></td>
+      </tr>
+      <tr>
+        <td class="lbl">フリガナ</td>
+        <td class="inp"><input type="text" placeholder="ヤマダ タロウ" style="width:100%"></td>
+      </tr>
+      <tr>
+        <td class="lbl">性別</td>
+        <td class="inp">
+          <div class="ri">
+            <label><input type="radio" name="gender" value="male" checked> 男性</label>
+            <label><input type="radio" name="gender" value="female"> 女性</label>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="lbl"><span class="req">必須</span>メールアドレス</td>
+        <td class="inp"><input type="email" placeholder="example@email.com" style="width:100%"></td>
+      </tr>
+      <tr>
+        <td class="lbl"><span class="req">必須</span>郵便番号</td>
+        <td class="inp"><input type="text" placeholder="123-4567" style="width:140px"></td>
+      </tr>
+      <tr>
+        <td class="lbl"><span class="req">必須</span>ご住所</td>
+        <td class="inp">
+          <div class="addr-city-wrap">
+            <select style="width:160px">
+              <option value="">都道府県</option>
+              <option>東京都</option><option>神奈川県</option><option>大阪府</option>
+              <option>愛知県</option><option>福岡県</option><option>北海道</option>
+            </select>
+          </div>
+          <div style="margin-bottom:5px"><input type="text" placeholder="市区町村" style="width:100%"></div>
+          <input type="text" placeholder="丁目番地・建物名" style="width:100%">
+        </td>
+      </tr>
+      <tr>
+        <td class="lbl"><span class="req">必須</span>電話番号</td>
+        <td class="inp"><input type="tel" placeholder="090-0000-0000" style="width:180px"></td>
+      </tr>
+      <tr>
+        <td class="lbl"><span class="req">必須</span>現在の靴サイズ<br><small style="font-size:11px;font-weight:normal;color:#888">（足長/cm）</small></td>
+        <td class="inp">
+          <select id="shoe-size" style="width:120px">
+            <option value="">選択</option>
+            <option value="22.0">22.0</option><option value="22.5">22.5</option>
+            <option value="23.0">23.0</option><option value="23.5">23.5</option>
+            <option value="24.0">24.0</option><option value="24.5">24.5</option>
+            <option value="25.0">25.0</option><option value="25.5">25.5</option>
+            <option value="26.0">26.0</option><option value="26.5">26.5</option>
+            <option value="27.0">27.0</option><option value="27.5">27.5</option>
+            <option value="28.0">28.0</option><option value="28.5">28.5</option>
+            <option value="29.0">29.0</option><option value="29.5">29.5</option>
+            <option value="30.0">30.0</option>
+            <option value="0">分からない</option>
+          </select>
+          <div class="autofill-note" id="size-note">Dr. Footの推奨値を自動入力しました（変更可）</div>
+        </td>
+      </tr>
+      <tr>
+        <td class="lbl"><span class="req">必須</span>現在の靴ワイズ<br><small style="font-size:11px;font-weight:normal;color:#888">（足幅/EE-EEEEE）</small></td>
+        <td class="inp">
+          <select id="shoe-width" style="width:120px">
+            <option value="">選択</option>
+            <option value="E">E</option>
+            <option value="EE">EE</option>
+            <option value="EEE">EEE</option>
+            <option value="EEEE">EEEE</option>
+            <option value="EEEEE">EEEEE</option>
+            <option value="0">分からない</option>
+          </select>
+          <div class="fnote">イージーオーダーでは1E以下は別途料金が発生する場合があります。</div>
+          <div class="autofill-note" id="width-note">Dr. Footの推奨値を自動入力しました（変更可）</div>
+        </td>
+      </tr>
+      <tr>
+        <td class="lbl"><span class="req">必須</span>お支払方法</td>
+        <td class="inp">
+          <select style="width:180px">
+            <option>銀行振込</option>
+            <option>佐川e-コレクト（カード）</option>
+            <option>佐川e-コレクト（現金）</option>
+            <option>ふるさと納税</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td class="lbl"><span class="req">必須</span>オプション</td>
+        <td class="inp">
+          <div class="ri">
+            <label><input type="radio" name="option" value="none" checked> なし</label>
+            <label><input type="radio" name="option" value="yes"> あり</label>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- オプション アコーディオン -->
+    <button type="button" class="acc-btn opt-btn" id="opt-btn" onclick="toggleAcc('opt')">
+      オプションを見る <span class="arrow">▼</span>
+    </button>
+    <div class="opt-wrap" id="opt-wrap">
+      <table class="opt-tbl">
+        <tr>
+          <td class="on">フルオーダー</td>
+          <td class="op">40,000円<br>（税込44,000円）</td>
+          <td class="od">ご来店の上、フットスキャナーによる足型計測が必要です。3Dプリンターでリアル足型を作成し、甲吊りする事で、足にピッタリのオーダーシューズを作る事が出来ます。</td>
+        </tr>
+        <tr>
+          <td class="on">パターン別注</td>
+          <td class="op">6,000円<br>（税込6,600円）</td>
+          <td class="od">雑誌の切り抜き写真等から型を興してそっくりに作る事が出来ます。</td>
+        </tr>
+        <tr>
+          <td class="on">ハーフブーツ</td>
+          <td class="op">8,000円<br>（税込8,800円）</td>
+          <td class="od">ブーツを作る事も出来ます。総丈15センチ以下のハーフブーツを別注。</td>
+        </tr>
+        <tr>
+          <td class="on">かかとパット</td>
+          <td class="op">2,000円<br>（税込2,200円）</td>
+          <td class="od">スニーカーのかかと部に見られる様に、ビジネス革靴でも予め柔らかいパットを仕込む事が出来ます。かかとが小さくて既製靴ではかかとが脱げがちな方にお勧めです。</td>
+        </tr>
+        <tr>
+          <td class="on">キルトタッセル付け</td>
+          <td class="op">2,500円<br>（税込2,750円）</td>
+          <td class="od">スリッポンの甲部分にキルトタッセル（房飾り）を付ける事が出来ます。</td>
+        </tr>
+        <tr>
+          <td class="on">二重革底</td>
+          <td class="op">4,000円<br>（税込4,400円）</td>
+          <td class="od">通常厚み約5ミリの革底材を2枚重ね縫いする事が出来ます。幾分重たくなりますが、堅牢さは増します。コバ（縁）はグルリコバ5ミリ、もしくは前コバ1センチの何れかになります。</td>
+        </tr>
+        <tr>
+          <td class="on">かかとの高さプラス</td>
+          <td class="op">1,000円<br>（税込1,100円）</td>
+          <td class="od">かかとの高さは通常約2.5センチになっています。5ミリ高くする毎に1,000円（税込1,100円）アップ。「5ミリプラス」を「1個」と下の備考欄にご記入ください。最大高さ3.5センチ迄。</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Dr. Foot スキャンアップロード アコーディオン（非アプリ時のみ） -->
+    <div id="drfoot-acc-wrap">
+      <button type="button" class="acc-btn scan-btn" id="scan-btn" onclick="toggleAcc('scan')">
+        「Dr. Footアプリ」でスキャンデータをアップロード <span class="arrow">▼</span>
+      </button>
+      <div class="scan-wrap" id="scan-wrap">
+        <div class="scan-radio-row">
+          <div class="ri">
+            <label><input type="radio" name="drfoot-use" value="none" id="drfoot-none" checked> なし</label>
+            <label><input type="radio" name="drfoot-use" value="yes" id="drfoot-yes"> あり</label>
+          </div>
+        </div>
+        <table class="scan-detail-tbl">
+          <tr>
+            <td class="sl">Dr. Foot</td>
+            <td>
+              Dr. Footアプリ（FootScanner）でiPhoneのLiDARカメラを使って足を3Dスキャンし、足型データをアップロードすることで、より精密なオーダーシューズを製作できます。<br>
+              スキャン後にアプリからエクスポートした <strong>FootModels.zip</strong> を選択してください。<br>
+              <span style="font-size:11px;color:#777">※アプリからこのページに直接アクセスすると、スキャン情報と足型データが自動連携されます。</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl">対応機種</td>
+            <td>iPhone 12 Pro以降（LiDARセンサー搭載機種）</td>
+          </tr>
+        </table>
+        <div class="scan-app-block">
+          <div class="app-link-text">Dr. Footアプリはこちらからダウンロードしてください。</div>
+          <button class="app-store-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            App Store でダウンロード
+          </button>
+        </div>
+        <hr class="scan-divider">
+        <div class="scan-upload-head">スキャンデータをアップロード</div>
+        <div class="file-row">
+          <label>FootModels.zip:</label>
+          <button type="button" class="file-btn" onclick="document.getElementById('zip-manual').click()">ファイルを選択</button>
+          <span class="file-none" id="zip-manual-name">選択されていません</span>
+          <input type="file" id="zip-manual" accept=".zip" style="display:none" onchange="document.getElementById('zip-manual-name').textContent=this.files[0]?this.files[0].name:'選択されていません'">
+        </div>
+      </div>
+    </div>
+
+    <!-- ② ZIP アップロード（アプリ経由のみ） -->
+    <div class="zip-upload" id="drfoot-zip">
+      <div style="border:1px solid #7799cc;border-top:none;padding:14px 16px;background:#f8faff;">
+        <div style="font-weight:700;font-size:12px;color:#223355;margin-bottom:10px;letter-spacing:.04em;">
+          足型データのアップロード <span class="req">必須</span>
+        </div>
+        <div class="zip-inner">
+          <div class="zt">FootModels.zip を選択</div>
+          <div class="zs">Dr. Footアプリの「Export Models」でエクスポートした<br>FootModels.zip をアップロードしてください</div>
+          <button type="button" class="zbtn" onclick="document.getElementById('zip-app').click()">ファイルを選択</button>
+          <input type="file" id="zip-app" accept=".zip" style="display:none" onchange="document.getElementById('zip-ok').style.display=this.files.length?'block':'none'">
+          <div class="zip-ok" id="zip-ok">✓ FootModels.zip</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 備考 -->
+    <table class="ftbl" style="margin-top:0;border-top:none">
+      <tr>
+        <td class="lbl" style="vertical-align:top;padding-top:10px">備考欄</td>
+        <td class="inp" style="padding:8px 10px">
+          <textarea placeholder="ご質問・ご要望、その他お伝えいただきたいことがございましたらご自由にお書き下さい。&#10;オプションをご希望の方はこちらにご記入ください。"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td class="lbl"><span class="req">必須</span>送信確認</td>
+        <td class="inp">
+          <label style="display:flex;align-items:flex-start;gap:7px;font-size:12px;color:#555;cursor:pointer">
+            <input type="checkbox" required style="margin-top:2px;flex-shrink:0">
+            <span>上記送信内容を確認したらチェックを入れてください</span>
+          </label>
+        </td>
+      </tr>
+    </table>
+
+    <!-- hidden field -->
+    <input type="hidden" name="scan_id" id="scan_id_hidden" value="">
+
+    <!-- SUBMIT -->
+    <div class="submit-area">
+      <button type="submit" class="btn-submit">確認</button>
+    </div>
+
+  </div><!-- /fwrap -->
+</div><!-- /page-wrap -->
+
+<script>
+(function () {
+
+  /* ── アコーディオン ── */
+  function toggleAcc(id) {
+    var btn  = document.getElementById(id + '-btn');
+    var wrap = document.getElementById(id + '-wrap');
+    var open = wrap.classList.toggle('open');
+    btn.classList.toggle('open', open);
+  }
+  window.toggleAcc = toggleAcc;
+
+  /* ── ダミーデータ ── */
+  var DUMMY = {
+    scan_id: 'a3f8c2d1',
+    recommended_size: '26.5',
+    recommended_width: 'EE'
+  };
+
+  /* ── モード切り替え ── */
+  var toggle = document.getElementById('mode-toggle');
+
+  function applyMode(isDrFoot) {
+    document.getElementById('lbl-app').style.opacity = isDrFoot ? '1' : '0.4';
+    document.getElementById('lbl-web').style.opacity = isDrFoot ? '0.4' : '1';
+
+    // ①バナー
+    document.getElementById('drfoot-banner').classList.toggle('on', isDrFoot);
+
+    // ②ZIPアップロード（アプリ専用）
+    document.getElementById('drfoot-zip').classList.toggle('on', isDrFoot);
+
+    // ⑤Dr. Foot手動セクション
+    document.getElementById('drfoot-acc-wrap').style.display = isDrFoot ? 'none' : 'block';
+
+    // ④ 靴サイズ・ワイズ自動選択
+    var ss = document.getElementById('shoe-size');
+    var sw = document.getElementById('shoe-width');
+    var sn = document.getElementById('size-note');
+    var wn = document.getElementById('width-note');
+    var hi = document.getElementById('scan_id_hidden');
+    if (isDrFoot) {
+      ss.value = DUMMY.recommended_size;
+      sw.value = DUMMY.recommended_width;
+      ss.classList.add('autofill');
+      sw.classList.add('autofill');
+      sn.style.display = 'block';
+      wn.style.display = 'block';
+      hi.value = DUMMY.scan_id;
+    } else {
+      ss.value = '';
+      sw.value = '';
+      ss.classList.remove('autofill');
+      sw.classList.remove('autofill');
+      sn.style.display = 'none';
+      wn.style.display = 'none';
+      hi.value = '';
+    }
+  }
+
+  toggle.addEventListener('change', function () { applyMode(this.checked); });
+  applyMode(false);
+
+})();
+</script>
+</body>
+</html>

@@ -8,13 +8,14 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --black: #0a0a0a;
-  --white: #ffffff;
-  --gold: #c9a84c;
-  --gray: #f5f5f5;
-  --gray2: #e8e8e8;
-  --text-sub: #666;
-  --max-w: 440px;
+  --black:   #0d0d0d;
+  --white:   #ffffff;
+  --gold:    #c9a84c;
+  --gray:    #f7f7f7;
+  --gray2:   #e8e8e8;
+  --sub:     #888;
+  --label:   #aaa;
+  --max-w:   440px;
 }
 
 html { scroll-behavior: smooth; }
@@ -29,39 +30,41 @@ body {
 
 img { -webkit-user-drag: none; user-select: none; }
 
+
 /* ── HEADER ── */
 .header {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 100;
-  background: rgba(10,10,10,0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  padding: 13px 20px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--gray2);
+  padding: 14px 22px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
 .header-logo {
-  color: var(--white);
-  font-size: 20px;
+  color: var(--black);
+  font-size: 17px;
   font-weight: 800;
   letter-spacing: 0.04em;
 }
 
 .header-cta {
-  background: var(--gold);
-  color: var(--black);
+  background: var(--black);
+  color: var(--white);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   padding: 8px 18px;
   border-radius: 20px;
   text-decoration: none;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   transition: opacity 0.15s;
 }
-.header-cta:active { opacity: 0.75; }
+.header-cta:active { opacity: 0.7; }
 
 
 /* ── HERO ── */
@@ -79,51 +82,51 @@ img { -webkit-user-drag: none; user-select: none; }
   background-image: url('riverfield.jpg');
   background-size: cover;
   background-position: center 35%;
-  filter: brightness(0.38);
+  filter: brightness(0.42);
 }
 
 .hero-gradient {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, transparent 60%);
+  background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, transparent 65%);
 }
 
 .hero-content {
   position: relative;
   z-index: 1;
-  padding: 60px 24px 60px;
+  padding: 56px 26px 64px;
   max-width: var(--max-w);
   margin: 0 auto;
   width: 100%;
 }
 
 .hero-eyebrow {
-  color: var(--gold);
+  color: rgba(255,255,255,0.5);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 
 .hero-headline {
   color: var(--white);
   font-size: 34px;
   font-weight: 800;
-  line-height: 1.22;
-  margin-bottom: 20px;
+  line-height: 1.24;
+  margin-bottom: 18px;
   letter-spacing: -0.02em;
 }
 
 .hero-sub {
-  color: rgba(255,255,255,0.7);
+  color: rgba(255,255,255,0.6);
   font-size: 15px;
-  line-height: 1.75;
-  margin-bottom: 36px;
+  line-height: 1.8;
+  margin-bottom: 38px;
 }
 
 .btn-primary {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
@@ -131,10 +134,10 @@ img { -webkit-user-drag: none; user-select: none; }
   color: var(--black);
   font-size: 16px;
   font-weight: 800;
-  padding: 17px 28px;
+  padding: 17px 32px;
   border-radius: 50px;
   text-decoration: none;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   transition: opacity 0.15s;
 }
 .btn-primary:active { opacity: 0.8; }
@@ -142,41 +145,40 @@ img { -webkit-user-drag: none; user-select: none; }
 
 /* ── SECTION BASE ── */
 .section {
-  padding: 68px 24px;
+  padding: 80px 26px;
   max-width: var(--max-w);
   margin: 0 auto;
 }
 
 .section-label {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 10px;
-}
-
-.divider {
-  width: 40px;
-  height: 3px;
-  background: var(--gold);
-  border-radius: 2px;
-  margin-bottom: 20px;
+  color: var(--label);
+  margin-bottom: 24px;
 }
 
 .section-title {
-  font-size: 27px;
+  font-size: 28px;
   font-weight: 800;
   line-height: 1.28;
-  letter-spacing: -0.01em;
-  margin-bottom: 14px;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
 }
 
 .section-sub {
   font-size: 15px;
-  color: var(--text-sub);
-  line-height: 1.75;
-  margin-bottom: 36px;
+  color: var(--sub);
+  line-height: 1.8;
+  margin-bottom: 40px;
+}
+
+/* section separator */
+.sep {
+  border: none;
+  border-top: 1px solid var(--gray2);
+  margin: 0;
 }
 
 
@@ -184,60 +186,63 @@ img { -webkit-user-drag: none; user-select: none; }
 .pain-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  border-top: 1px solid var(--gray2);
 }
 
 .pain-item {
-  background: var(--gray);
-  border-radius: 14px;
-  padding: 15px 18px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--gray2);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--black);
   display: flex;
   align-items: center;
-  gap: 14px;
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.45;
+  gap: 12px;
 }
 
-.pain-icon { font-size: 21px; flex-shrink: 0; }
+.pain-item::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--sub);
+  flex-shrink: 0;
+}
 
 
 /* ── SOLUTION ── */
 .solution-wrap {
-  background: var(--black);
-  padding: 68px 0;
+  padding: 80px 0;
+  border-top: 1px solid var(--gray2);
+  border-bottom: 1px solid var(--gray2);
 }
 
 .solution-inner {
   max-width: var(--max-w);
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 26px;
 }
 
-.solution-wrap .section-title { color: var(--white); }
-.solution-wrap .section-sub   { color: rgba(255,255,255,0.55); }
-
 .solution-card {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 16px;
-  padding: 20px 22px;
-  margin-bottom: 12px;
+  border: 1px solid var(--gray2);
+  border-radius: 14px;
+  padding: 22px 22px;
+  margin-bottom: 10px;
+  background: var(--white);
 }
 
 .solution-card-title {
-  color: var(--gold);
-  font-size: 12px;
+  color: var(--black);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
   margin-bottom: 8px;
 }
 
 .solution-card-text {
-  color: rgba(255,255,255,0.8);
+  color: var(--sub);
   font-size: 14px;
-  line-height: 1.7;
+  line-height: 1.75;
 }
 
 
@@ -250,71 +255,73 @@ img { -webkit-user-drag: none; user-select: none; }
 .step-item {
   display: flex;
   gap: 20px;
-  padding: 18px 0;
+  padding: 20px 0;
   position: relative;
 }
 
 .step-item:not(:last-child)::after {
   content: '';
   position: absolute;
-  left: 19px;
-  top: 52px;
+  left: 15px;
+  top: 54px;
   bottom: 0;
-  width: 2px;
-  background: linear-gradient(to bottom, var(--gold), transparent);
+  width: 1px;
+  background: var(--gray2);
 }
 
 .step-num {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: var(--gold);
-  color: var(--black);
-  font-size: 17px;
-  font-weight: 800;
+  background: var(--black);
+  color: var(--white);
+  font-size: 14px;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .step-title {
   font-size: 17px;
   font-weight: 700;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
 
 .step-desc {
   font-size: 14px;
-  color: var(--text-sub);
-  line-height: 1.65;
+  color: var(--sub);
+  line-height: 1.7;
 }
 
 
 /* ── DIAGNOSIS DEMO ── */
 .diag-wrap {
-  background: var(--gray);
-  padding: 68px 0;
+  padding: 80px 0;
+  border-top: 1px solid var(--gray2);
 }
 
 .diag-inner {
   max-width: var(--max-w);
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 26px;
 }
 
 .diag-card {
   background: var(--white);
-  border-radius: 22px;
-  padding: 26px;
-  box-shadow: 0 6px 32px rgba(0,0,0,0.09);
+  border: 1px solid var(--gray2);
+  border-radius: 18px;
+  padding: 24px;
 }
 
 .diag-header {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
-  color: var(--text-sub);
-  letter-spacing: 0.04em;
+  color: var(--sub);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   margin-bottom: 20px;
   padding-bottom: 14px;
   border-bottom: 1px solid var(--gray2);
@@ -329,16 +336,18 @@ img { -webkit-user-drag: none; user-select: none; }
 
 .diag-foot {
   background: var(--gray);
-  border-radius: 14px;
+  border-radius: 10px;
   padding: 14px 10px;
   text-align: center;
 }
 
 .diag-foot-label {
   font-size: 11px;
-  color: var(--text-sub);
+  color: var(--sub);
   font-weight: 600;
   margin-bottom: 4px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .diag-foot-size {
@@ -350,32 +359,31 @@ img { -webkit-user-drag: none; user-select: none; }
 
 .diag-foot-unit {
   font-size: 13px;
-  color: var(--text-sub);
+  color: var(--sub);
   font-weight: 500;
 }
 
 .diag-alert {
-  background: #fff8e6;
-  border: 1px solid #f0d570;
-  border-radius: 11px;
+  background: var(--gray);
+  border-radius: 10px;
   padding: 12px 14px;
   font-size: 13px;
-  color: #7a5800;
+  color: var(--black);
   margin-bottom: 14px;
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
 .diag-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 11px 0;
-  border-bottom: 1px solid #f2f2f2;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--gray2);
   font-size: 14px;
 }
 .diag-row:last-of-type { border-bottom: none; }
 
-.diag-key { color: var(--text-sub); font-weight: 500; }
+.diag-key { color: var(--sub); font-weight: 500; }
 .diag-val { font-weight: 700; display: flex; align-items: center; gap: 6px; }
 
 .badge {
@@ -383,51 +391,51 @@ img { -webkit-user-drag: none; user-select: none; }
   font-size: 11px;
   font-weight: 700;
   padding: 2px 8px;
-  border-radius: 10px;
+  border-radius: 6px;
 }
-.badge-warn { background: #ffeaea; color: #cc3333; }
-.badge-ok   { background: #e6f5e6; color: #2a7a2a; }
+.badge-warn { background: #f5ece0; color: #8a5a00; }
+.badge-ok   { background: #eaf3ea; color: #2a6a2a; }
 
 .diag-recommend {
-  margin-top: 20px;
-  background: linear-gradient(135deg, #0d0d0d 0%, #222 100%);
-  border-radius: 16px;
+  margin-top: 18px;
+  background: var(--black);
+  border-radius: 12px;
   padding: 20px 22px;
   color: var(--white);
 }
 
 .diag-recommend-label {
   font-size: 11px;
-  color: var(--gold);
-  font-weight: 700;
+  color: rgba(255,255,255,0.4);
+  font-weight: 600;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .diag-recommend-text {
   font-size: 14px;
-  color: rgba(255,255,255,0.75);
+  color: rgba(255,255,255,0.65);
   line-height: 1.6;
   margin-bottom: 6px;
 }
 
 .diag-recommend-size {
-  font-size: 30px;
+  font-size: 28px;
   font-weight: 800;
-  color: var(--gold);
+  color: var(--white);
   letter-spacing: -0.02em;
 }
 
 .diag-note {
   font-size: 12px;
-  color: rgba(255,255,255,0.35);
-  margin-top: 8px;
-  line-height: 1.5;
+  color: rgba(255,255,255,0.3);
+  margin-top: 10px;
+  line-height: 1.6;
 }
 
 .diag-cta {
-  margin-top: 22px;
+  margin-top: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -447,44 +455,44 @@ img { -webkit-user-drag: none; user-select: none; }
 .trust-list {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 28px;
 }
 
 .trust-item {
   display: flex;
   align-items: flex-start;
-  gap: 16px;
+  gap: 18px;
 }
 
 .trust-icon {
-  width: 46px;
-  height: 46px;
-  background: var(--black);
-  border-radius: 13px;
+  width: 44px;
+  height: 44px;
+  background: var(--gray);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 21px;
+  font-size: 20px;
   flex-shrink: 0;
 }
 
 .trust-title {
   font-size: 15px;
   font-weight: 700;
-  margin-bottom: 4px;
+  margin-bottom: 5px;
 }
 
 .trust-desc {
   font-size: 13px;
-  color: var(--text-sub);
-  line-height: 1.65;
+  color: var(--sub);
+  line-height: 1.7;
 }
 
 
 /* ── FINAL CTA ── */
 .final-cta {
   background: var(--black);
-  padding: 80px 24px;
+  padding: 88px 26px;
   text-align: center;
 }
 
@@ -494,12 +502,12 @@ img { -webkit-user-drag: none; user-select: none; }
 }
 
 .final-cta-eyebrow {
-  color: var(--gold);
+  color: rgba(255,255,255,0.35);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .final-cta-title {
@@ -508,14 +516,14 @@ img { -webkit-user-drag: none; user-select: none; }
   font-weight: 800;
   line-height: 1.28;
   margin-bottom: 14px;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 .final-cta-sub {
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,0.4);
   font-size: 14px;
-  line-height: 1.75;
-  margin-bottom: 36px;
+  line-height: 1.8;
+  margin-bottom: 38px;
 }
 
 .btn-primary-lg {
@@ -530,8 +538,8 @@ img { -webkit-user-drag: none; user-select: none; }
   padding: 18px 28px;
   border-radius: 50px;
   text-decoration: none;
-  letter-spacing: 0.02em;
-  margin-bottom: 14px;
+  letter-spacing: 0.01em;
+  margin-bottom: 12px;
   transition: opacity 0.15s;
 }
 .btn-primary-lg:active { opacity: 0.8; }
@@ -542,38 +550,39 @@ img { -webkit-user-drag: none; user-select: none; }
   justify-content: center;
   gap: 8px;
   background: transparent;
-  color: rgba(255,255,255,0.55);
+  color: rgba(255,255,255,0.4);
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   padding: 14px 28px;
   border-radius: 50px;
   text-decoration: none;
-  border: 1px solid rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.14);
   transition: opacity 0.15s;
 }
 .btn-secondary:active { opacity: 0.7; }
 
 .cta-note {
   font-size: 12px;
-  color: rgba(255,255,255,0.25);
-  margin-top: 18px;
-  line-height: 1.6;
+  color: rgba(255,255,255,0.2);
+  margin-top: 20px;
+  line-height: 1.7;
 }
 
 
 /* ── FOOTER ── */
 .footer {
-  background: #050505;
-  padding: 26px 24px;
+  background: var(--black);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 24px;
   text-align: center;
   font-size: 12px;
-  color: rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.15);
 }
 
 
 /* ── DESKTOP ── */
 @media (min-width: 500px) {
-  .hero-headline  { font-size: 40px; }
+  .hero-headline   { font-size: 40px; }
   .final-cta-title { font-size: 34px; }
 }
 </style>
@@ -610,34 +619,33 @@ img { -webkit-user-drag: none; user-select: none; }
 <!-- ── PAIN ── -->
 <section class="section">
   <div class="section-label">こんな悩みありませんか？</div>
-  <div class="divider"></div>
   <h2 class="section-title">靴の痛み、<br>あきらめていませんか。</h2>
   <p class="section-sub">既製靴が合わないのは、あなたの足が特別なわけでも、悪いわけでもありません。ただ、足の形を無視した靴を履いているだけです。</p>
 
   <div class="pain-list">
-    <div class="pain-item"><span>幅がきつくて親指が曲がってきた気がする</span></div>
-    <div class="pain-item"><span>左右でサイズが違い、どちらかが緩い</span></div>
-    <div class="pain-item"><span>長時間歩くと足・腰が疲れやすい</span></div>
-    <div class="pain-item"><span>百貨店のオーダーは面倒で行けない</span></div>
+    <div class="pain-item">幅がきつくて親指が曲がってきた気がする</div>
+    <div class="pain-item">左右でサイズが違い、どちらかが緩い</div>
+    <div class="pain-item">長時間歩くと足・腰が疲れやすい</div>
+    <div class="pain-item">百貨店のオーダーは面倒で行けない</div>
   </div>
 </section>
 
 
 <!-- ── SOLUTION ── -->
+<hr class="sep">
 <section class="solution-wrap">
   <div class="solution-inner">
     <div class="section-label">足を知ると、何が変わるか</div>
-    <div class="divider"></div>
     <h2 class="section-title">まず、自分の足を知る。<br>それだけで靴選びが<br>変わります。</h2>
-    <p class="section-sub">なぜ靴が痛いのか、数値が教えてくれます。iPhoneのLiDARで足を3Dスキャンし、足長・足幅・左右差を計測。診断結果を見るだけで「なるほど」があります。オーダー靴が必要なら、そのまま注文もできます。</p>
+    <p class="section-sub">なぜ靴が痛いのか、数値が教えてくれます。iPhoneのLiDARで足を3Dスキャンし、足長・足幅・甲高・JISサイズを計測。診断結果を見るだけで「なるほど」があります。オーダー靴が必要なら、そのまま注文もできます。</p>
 
     <div class="solution-card">
       <div class="solution-card-title">📐 精密3Dスキャン</div>
-      <p class="solution-card-text">Apple LiDARセンサーで足の全形状を3D復元。足長・足幅・甲高・左右差を正確に計測します。</p>
+      <p class="solution-card-text">Apple LiDARセンサーで足の全形状を3D復元。足長・足幅・甲高・JISサイズを正確に計測します。</p>
     </div>
     <div class="solution-card">
-      <div class="solution-card-title">🤖 AI足型診断</div>
-      <p class="solution-card-text">計測データをもとにAIがあなたの足の特徴を診断。「幅広」「甲高」「左右差」など、既製靴で起きている問題の原因を数値で可視化します。</p>
+      <div class="solution-card-title">🔍 足型診断</div>
+      <p class="solution-card-text">計測データをもとに足の特徴を診断。「幅広」「甲高」など、既製靴で起きている問題の原因を数値で可視化します。</p>
     </div>
     <div class="solution-card">
       <div class="solution-card-title">👞 職人によるオーダー製作</div>
@@ -650,7 +658,6 @@ img { -webkit-user-drag: none; user-select: none; }
 <!-- ── HOW IT WORKS ── -->
 <section class="section">
   <div class="section-label">使い方</div>
-  <div class="divider"></div>
   <h2 class="section-title">たった3ステップ、<br>自宅で完結</h2>
   <p class="section-sub">店舗に行く必要はありません。iPhoneさえあれば始められます。</p>
 
@@ -666,13 +673,13 @@ img { -webkit-user-drag: none; user-select: none; }
       <div class="step-num">2</div>
       <div class="step-body">
         <div class="step-title">「なぜ痛かったか」がわかる</div>
-        <p class="step-desc">足長・足幅・左右差など詳細な計測値と診断コメントが表示されます。多くの方が「え、左右でこんなに違うの？」と驚きます。</p>
+        <p class="step-desc">足長・足幅・甲高・JISサイズなど詳細な計測値と診断コメントが表示されます。「なぜ靴が痛かったのか」が数値でわかります。</p>
       </div>
     </div>
     <div class="step-item">
       <div class="step-num">3</div>
       <div class="step-body">
-        <div class="step-title">革靴を注文</div>
+        <div class="step-title">靴を注文</div>
         <p class="step-desc">靴の種類・色を選んで注文。スキャンデータをもとに職人が製作し、自宅にお届けします。</p>
       </div>
     </div>
@@ -684,12 +691,11 @@ img { -webkit-user-drag: none; user-select: none; }
 <section class="diag-wrap">
   <div class="diag-inner">
     <div class="section-label">診断サンプル</div>
-    <div class="divider"></div>
-    <h2 class="section-title">こんな診断結果が<br>届きます</h2>
+    <h2 class="section-title">こんな診断結果が<br>表示されます</h2>
     <p class="section-sub" style="margin-bottom:28px">数値で「見えなかった問題」が一目でわかります。</p>
 
     <div class="diag-card">
-      <div class="diag-header">📊 足型診断レポート（サンプル）</div>
+      <div class="diag-header">足型診断レポート（サンプル）</div>
 
       <div class="diag-feet">
         <div class="diag-foot">
@@ -703,7 +709,7 @@ img { -webkit-user-drag: none; user-select: none; }
       </div>
 
       <div class="diag-alert">
-        ⚠️ <b>左右差 5mm</b> — 右足に合わせると左が緩く、左に合わせると右がきつくなります。これが「片足だけ痛い」原因です。
+        <b>幅広（EE相当）</b> — 標準幅より +9mm。これが「幅がきつい」原因です。
       </div>
 
       <div class="diag-row">
@@ -715,13 +721,13 @@ img { -webkit-user-drag: none; user-select: none; }
         <span class="diag-val">やや高め <span class="badge badge-warn">甲高</span></span>
       </div>
       <div class="diag-row">
-        <span class="diag-key">かかと幅</span>
-        <span class="diag-val">標準 <span class="badge badge-ok">標準</span></span>
+        <span class="diag-key">JISサイズ</span>
+        <span class="diag-val">26.5cm / EE <span class="badge badge-ok">算出済</span></span>
       </div>
 
       <div class="diag-recommend">
         <div class="diag-recommend-label">推奨オーダー仕様</div>
-        <div class="diag-recommend-text">左右非対称・幅広EE・甲高設計</div>
+        <div class="diag-recommend-text">幅広EE・甲高設計</div>
         <div class="diag-recommend-size">26.5cm / EE幅</div>
         <p class="diag-note">※ このサイズの組み合わせは既製靴には存在しません。オーダーメイドだから実現できます。</p>
       </div>
@@ -735,7 +741,6 @@ img { -webkit-user-drag: none; user-select: none; }
 <!-- ── TRUST ── -->
 <section class="section">
   <div class="section-label">なぜ信頼できるか</div>
-  <div class="divider"></div>
   <h2 class="section-title">最先端の技術と<br>職人の技の融合</h2>
   <p class="section-sub" style="margin-bottom:32px"> </p>
 

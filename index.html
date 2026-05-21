@@ -124,6 +124,27 @@ body {
 }
 
 
+/* ── SCREENSHOTS ── */
+.screenshots {
+  padding: 0 26px 80px;
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+
+.screenshots-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.screenshot-img {
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0 10px 48px rgba(0,0,0,0.13);
+  display: block;
+}
+
+
 /* ── SECTION ── */
 .section {
   padding: 80px 26px;
@@ -614,6 +635,10 @@ body {
   .btn-download  { font-size: 18px; padding: 20px 48px; max-width: 380px; margin: 0 auto; }
   .hero-note     { font-size: 13px; margin-top: 18px; }
 
+  .screenshots        { padding: 0 52px 112px; }
+  .screenshots-grid   { gap: 20px; }
+  .screenshot-img     { border-radius: 26px; box-shadow: 0 14px 60px rgba(0,0,0,0.13); }
+
   .section       { padding: 112px 52px; }
   .section-label { font-size: 12px; margin-bottom: 24px; }
   .section-title { font-size: 44px; margin-bottom: 22px; }
@@ -709,6 +734,15 @@ body {
   <a href="#download" class="btn-download">App Storeからダウンロード</a>
   <p class="hero-note">iPhone 12 Pro以降（LiDAR搭載モデル）が必要です</p>
 </section>
+
+
+<!-- SCREENSHOTS -->
+<div class="screenshots">
+  <div class="screenshots-grid">
+    <img src="screenshot1.png" alt="アプリ スキャン画面" class="screenshot-img">
+    <img src="screenshot2.png" alt="アプリ 診断結果画面" class="screenshot-img">
+  </div>
+</div>
 
 
 <!-- PAIN -->

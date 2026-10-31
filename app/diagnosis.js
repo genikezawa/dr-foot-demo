@@ -1,5 +1,5 @@
 // 診断文の組み立て。FootScanner の DiagnosisContentGenerator.swift の移植
-// (設計: foot-diagnosis/アプリ用診断と症状.md 5〜8章)。
+// (設計: foot-diagnosis/アプリ用診断と症状.md 2〜3章)。
 // 公開デモ用に、外反母趾・内転足の所見文は断定を避けた「疑い」表記にしている(偽陽性が多いため)。
 
 export const CATEGORIES = ["hallux_valgus", "flat_arch", "high_arch", "adducted_forefoot"];

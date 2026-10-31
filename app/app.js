@@ -210,7 +210,7 @@ function renderReport() {
       <p class="block-num">02</p>
       <h2 class="block-title">起こりやすいこと</h2>
       <p class="sub-title">すでに兆候が見られるもの</p>
-      ${li(content.observed, true)}
+      ${observedList()}
       <p class="sub-title">今後注意したいこと</p>
       ${li(content.future, false)}
     </div>
@@ -225,6 +225,18 @@ function renderReport() {
       ${li(content.guidance, false)}
     </div>`;
   $("report").innerHTML = html;
+  syncSee3d();
+}
+
+// 「すでに兆候」の各所見に、3D足型の該当部位を表示するボタンを付ける
+function observedList() {
+  const cats = CATEGORIES.filter((c) => dx.positives.has(c));
+  if (!cats.length) return `<p class="empty">特にありません。</p>`;
+  return `<ul class="list warm">${cats.map((c, i) => `<li>${esc(content.observed[i])}<button class="see3d" data-heat="${c}" data-scroll="1">3Dで見る</button></li>`).join("")}</ul>`;
+}
+
+function syncSee3d() {
+  document.querySelectorAll(".see3d").forEach((b) => b.setAttribute("aria-pressed", b.dataset.heat === state.heat));
 }
 
 // ---- 注文 ----
@@ -334,6 +346,7 @@ function renderHeatChips() {
     cap = `${CATEGORY_LABEL[state.heat]}のある足(${pos}足)とない足(${neg}足)を比べ、形の違いがはっきり出る部位ほど赤く表示しています。`;
     if (!dx.positives.has(state.heat)) cap += "この所見はあなたの足では検出されていません。";
   }
+  syncSee3d();
   $("heat-caption").textContent = cap + "色は多数の足型から求めた統計で、この症状で典型的に形が変わる場所を示します(あなた個人の判定根拠ではありません)。3Dモデルは計測値から作ったデモ用の形状です。";
 }
 
@@ -488,7 +501,7 @@ function showTab(tab) {
   document.querySelectorAll(".screen").forEach((s) => s.classList.toggle("active", s.id === `screen-${tab}`));
   document.querySelectorAll(".tab").forEach((t) => t.setAttribute("aria-selected", t.dataset.tab === tab));
   window.scrollTo({ top: 0 });
-  if (tab === "3d" && !viewer) {
+  if (tab === "report" && !viewer) {
     try {
       viewer = createViewer();
     } catch (e) {
@@ -504,7 +517,13 @@ document.addEventListener("click", (e) => {
   if (t.dataset.sample) { selectSample(Number(t.dataset.sample)); return; }
   if (t.dataset.tab) { showTab(t.dataset.tab); return; }
   if (t.dataset.goto) { showTab(t.dataset.goto); return; }
-  if (t.dataset.heat) { state.heat = t.dataset.heat; renderHeatChips(); viewer?.colors(); return; }
+  if (t.dataset.heat) {
+    state.heat = t.dataset.heat;
+    renderHeatChips();
+    viewer?.colors();
+    if (t.dataset.scroll) $("viewer").scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
   if (t.dataset.side) {
     state.side = t.dataset.side;
     document.querySelectorAll("[data-side]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.side === state.side));
@@ -522,5 +541,6 @@ $("modal").addEventListener("click", (e) => { if (e.target.id === "modal") e.cur
 
 const qs = Number(new URLSearchParams(location.search).get("s"));
 selectSample(SAMPLES[qs] ? qs : 0);
-const hashTab = location.hash.slice(1);
-if (["result", "3d", "text", "order"].includes(hashTab)) showTab(hashTab);
+// 旧URL(#3d・#text)は統合した診断画面に寄せる
+const hashTab = { "3d": "report", text: "report" }[location.hash.slice(1)] ?? location.hash.slice(1);
+if (["result", "report", "order"].includes(hashTab)) showTab(hashTab);

@@ -367,6 +367,21 @@ main {
 .list li::before { content: ""; position: absolute; left: 2px; top: 0.72em; width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
 .list.warm li::before { background: var(--warm); }
 .empty { font-size: 13px; color: var(--label); }
+.report-divider { height: 1px; background: var(--line); margin: 22px 0 24px; }
+.see3d {
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--warm);
+  background: var(--warm-bg);
+  border: none;
+  border-radius: 10px;
+  padding: 2px 8px;
+  margin-left: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.see3d[aria-pressed="true"] { color: var(--white); background: var(--warm); }
 
 .custom-box {
   background: var(--gold-bg);
@@ -498,7 +513,7 @@ main {
   -webkit-backdrop-filter: blur(16px);
   border-top: 1px solid var(--line);
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   padding: 6px 4px calc(8px + env(safe-area-inset-bottom));
 }
 .tab {
@@ -571,14 +586,14 @@ main {
         </div>
       </div>
 
-      <button class="cta" data-goto="3d">症状が出やすい部位を3Dで見る</button>
-      <button class="cta ghost" data-goto="text">診断文を読む</button>
+      <button class="cta" data-goto="report">AI診断を見る(3D足型・診断文)</button>
+      <button class="cta ghost" data-goto="order">この足型で靴をつくる</button>
     </section>
 
-    <!-- 3D -->
-    <section class="screen" id="screen-3d">
-      <p class="screen-label">3D MODEL</p>
-      <h1 class="screen-title">3D足型と症状部位マップ</h1>
+    <!-- 診断(3D足型 + 症状部位マップ + 診断文) -->
+    <section class="screen" id="screen-report">
+      <p class="screen-label">AI DIAGNOSIS</p>
+      <h1 class="screen-title">あなたの足の診断</h1>
 
       <div class="viewer" id="viewer">
         <div class="viewer-loading" id="viewer-loading">3Dモデルを読み込み中…</div>
@@ -592,12 +607,8 @@ main {
       <div class="chips" id="heat-chips" role="group" aria-label="表示する症状"></div>
       <div class="legend"><span>差が小さい</span><div class="legend-bar"></div><span>大きい</span></div>
       <p class="heat-caption" id="heat-caption"></p>
-    </section>
 
-    <!-- 診断文 -->
-    <section class="screen" id="screen-text">
-      <p class="screen-label">REPORT</p>
-      <h1 class="screen-title">あなたの足の診断文</h1>
+      <div class="report-divider"></div>
       <div id="report"></div>
       <p class="disclaimer">
         本診断は足の形態から体質の傾向を示すもので、医療上の診断ではありません。痛みや変形が気になる場合は専門医にご相談ください。
@@ -646,11 +657,8 @@ main {
     <button class="tab" role="tab" data-tab="result" aria-selected="true">
       <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>結果
     </button>
-    <button class="tab" role="tab" data-tab="3d" aria-selected="false">
-      <svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>3D
-    </button>
-    <button class="tab" role="tab" data-tab="text" aria-selected="false">
-      <svg viewBox="0 0 24 24"><path d="M5 4h10l4 4v12H5z"/><path d="M15 4v4h4M8 12h8M8 16h8"/></svg>診断文
+    <button class="tab" role="tab" data-tab="report" aria-selected="false">
+      <svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>AI診断
     </button>
     <button class="tab" role="tab" data-tab="order" aria-selected="false">
       <svg viewBox="0 0 24 24"><path d="M3 16c0-2 1-3 3-3.5l4-1 3-4c1-1 2-1 3 0l1 2c.5 1 1.5 1.5 2.5 1.5H20a1 1 0 011 1V17a1 1 0 01-1 1H4a1 1 0 01-1-1z"/><path d="M3 18.5h18"/></svg>注文

@@ -113,7 +113,7 @@ function selectSample(i) {
   sample = SAMPLES[i];
   dx = combine(sample);
   content = generateContent(sample, dx);
-  state.heat = dx.positives.size ? "all" : "none";
+  state.heat = dx.positives.size > 1 ? "all" : dx.positives.size ? [...dx.positives][0] : "none";
   state.design = recommendedDesign();
   state.method = content.customReasons.length ? "fitting" : "easy";
   renderSamples();
@@ -325,29 +325,32 @@ function heatColor(t, out, o) {
 }
 
 function renderHeatChips() {
+  // 色は陽性と判定された所見にだけ付ける(判定と図を食い違わせない。仕様書10.6)
+  const pos = CATEGORIES.filter((c) => dx.positives.has(c));
   const opts = [];
-  if (dx.positives.size) opts.push(["all", "検出された所見"]);
-  for (const c of CATEGORIES) opts.push([c, CATEGORY_LABEL[c]]);
-  opts.push(["none", "色なし"]);
+  if (pos.length > 1) opts.push(["all", "検出された所見"]);
+  for (const c of pos) opts.push([c, CATEGORY_LABEL[c]]);
+  if (pos.length) opts.push(["none", "色なし"]);
   $("heat-chips").innerHTML = opts.map(([k, label]) => {
-    const dot = CATEGORIES.includes(k) && dx.positives.has(k) ? '<span class="dot"></span>' : "";
+    const dot = CATEGORIES.includes(k) ? '<span class="dot"></span>' : "";
     return `<button class="chip" data-heat="${k}" aria-pressed="${state.heat === k}">${dot}${label}</button>`;
   }).join("");
 
   const n = window.FOOT_DATA.n;
   let cap;
-  if (state.heat === "none") {
+  if (!pos.length) {
+    cap = "所見が検出されなかったため、色分けはしていません。";
+  } else if (state.heat === "none") {
     cap = "色分けをしていない3D足型です。";
-  } else if (state.heat === "all") {
-    const labels = CATEGORIES.filter((c) => dx.positives.has(c)).map((c) => CATEGORY_LABEL[c]);
-    cap = `検出された所見(${labels.join("・")})で、典型的に形が変わる部位を重ねて表示しています。`;
   } else {
-    const [pos, neg] = n[state.heat];
-    cap = `${CATEGORY_LABEL[state.heat]}のある足(${pos}足)とない足(${neg}足)を比べ、形の違いがはっきり出る部位ほど赤く表示しています。`;
-    if (!dx.positives.has(state.heat)) cap += "この所見はあなたの足では検出されていません。";
+    const keys = state.heat === "all" ? pos : [state.heat];
+    const label = keys.map((c) => CATEGORY_LABEL[c]).join("・");
+    const counts = keys.length === 1 ? `(${n[keys[0]][0]}足と${n[keys[0]][1]}足の比較)` : "";
+    cap = `${label}で、メッシュ上で目立つ形の特徴を色で示しています。${label}のある足とない足${counts}を見分けるときに、特に効いている部位です。`;
   }
+  document.querySelector(".legend").hidden = !pos.length || state.heat === "none";
   syncSee3d();
-  $("heat-caption").textContent = cap + "色は多数の足型から求めた統計で、この症状で典型的に形が変わる場所を示します(あなた個人の判定根拠ではありません)。3Dモデルは計測値から作ったデモ用の形状です。";
+  $("heat-caption").textContent = cap + (pos.length ? "色は多数の足型から求めた傾向で、あなた個人の診断の根拠ではありません。" : "") + "3Dモデルは計測値から作ったデモ用の形状です。";
 }
 
 let viewer = null;
@@ -453,7 +456,7 @@ function createViewer() {
   }
 
   function updateColors() {
-    const keys = state.heat === "all" ? [...dx.positives] : CATEGORIES.includes(state.heat) ? [state.heat] : [];
+    const keys = state.heat === "all" ? [...dx.positives] : dx.positives.has(state.heat) ? [state.heat] : [];
     for (let i = 0; i < V; i++) {
       let t = 0;
       for (const k of keys) t = Math.max(t, data.heat[k][i] / 100);

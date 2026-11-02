@@ -352,6 +352,7 @@ main {
 .chip[aria-pressed="true"] { background: var(--black); border-color: var(--black); color: var(--white); }
 
 .legend { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--label); margin-bottom: 8px; }
+.legend[hidden] { display: none; }
 .legend-bar { flex: 1; height: 8px; border-radius: 4px; background: linear-gradient(90deg, #ece4da, #f2b84b 45%, #e5612f 75%, #b81d24); }
 .heat-caption { font-size: 12px; line-height: 1.7; color: var(--sub); }
 
@@ -590,7 +591,7 @@ main {
       <button class="cta ghost" data-goto="order">この足型で靴をつくる</button>
     </section>
 
-    <!-- 診断(3D足型 + 症状部位マップ + 診断文) -->
+    <!-- 診断(3D足型 + 寄与マップ + 診断文) -->
     <section class="screen" id="screen-report">
       <p class="screen-label">AI DIAGNOSIS</p>
       <h1 class="screen-title">あなたの足の診断</h1>
@@ -605,7 +606,7 @@ main {
       </div>
 
       <div class="chips" id="heat-chips" role="group" aria-label="表示する症状"></div>
-      <div class="legend"><span>差が小さい</span><div class="legend-bar"></div><span>大きい</span></div>
+      <div class="legend"><span>目立つ</span><div class="legend-bar"></div><span>特に目立つ</span></div>
       <p class="heat-caption" id="heat-caption"></p>
 
       <div class="report-divider"></div>

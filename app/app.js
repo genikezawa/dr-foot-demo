@@ -113,7 +113,8 @@ function selectSample(i) {
   sample = SAMPLES[i];
   dx = combine(sample);
   content = generateContent(sample, dx);
-  state.heat = dx.positives.size > 1 ? "all" : dx.positives.size ? [...dx.positives][0] : "none";
+  // 色は説明を開いた1症状の分だけ出す(全症状を同時に塗ると範囲が広すぎて意味が分からない。仕様書10.6)
+  state.heat = CATEGORIES.find((c) => dx.positives.has(c)) || "none";
   state.design = recommendedDesign();
   state.method = content.customReasons.length ? "fitting" : "easy";
   renderSamples();
@@ -328,7 +329,6 @@ function renderHeatChips() {
   // 色は陽性と判定された所見にだけ付ける(判定と図を食い違わせない。仕様書10.6)
   const pos = CATEGORIES.filter((c) => dx.positives.has(c));
   const opts = [];
-  if (pos.length > 1) opts.push(["all", "検出された所見"]);
   for (const c of pos) opts.push([c, CATEGORY_LABEL[c]]);
   if (pos.length) opts.push(["none", "色なし"]);
   $("heat-chips").innerHTML = opts.map(([k, label]) => {
@@ -343,10 +343,9 @@ function renderHeatChips() {
   } else if (state.heat === "none") {
     cap = "色分けをしていない3D足型です。";
   } else {
-    const keys = state.heat === "all" ? pos : [state.heat];
-    const label = keys.map((c) => CATEGORY_LABEL[c]).join("・");
-    const counts = keys.length === 1 ? `(${n[keys[0]][0]}足と${n[keys[0]][1]}足の比較)` : "";
-    cap = `${label}で、メッシュ上で目立つ形の特徴を色で示しています。${label}のある足とない足${counts}を見分けるときに、特に効いている部位です。`;
+    const label = CATEGORY_LABEL[state.heat];
+    const [np_, nn] = n[state.heat];
+    cap = `${label}で、メッシュ上で目立つ形の特徴を色で示しています。${label}のある足とない足(${np_}足と${nn}足の比較)を見分けるときに、特に効いている部位です。`;
   }
   document.querySelector(".legend").hidden = !pos.length || state.heat === "none";
   syncSee3d();
@@ -456,7 +455,7 @@ function createViewer() {
   }
 
   function updateColors() {
-    const keys = state.heat === "all" ? [...dx.positives] : dx.positives.has(state.heat) ? [state.heat] : [];
+    const keys = dx.positives.has(state.heat) ? [state.heat] : [];
     for (let i = 0; i < V; i++) {
       let t = 0;
       for (const k of keys) t = Math.max(t, data.heat[k][i] / 100);

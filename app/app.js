@@ -189,7 +189,7 @@ function renderMeasure() {
   const n = Object.values(state.scans).filter(Boolean).length;
   $("scan-progress").style.width = `${(n / 2) * 100}%`;
   $("scan-count").textContent = `${n} / 2 足`;
-  $("scan-feet").innerHTML = ["right", "left"].map((side) => {
+  $("scan-feet").innerHTML = ["left", "right"].map((side) => {
     const m = scannedFoot(side);
     return `<div class="scan-foot${m ? " done" : ""}">
       <img src="img/guide_${side}.png" alt="">
@@ -826,12 +826,26 @@ function showModal(title, html) {
 
 // ---- タブ・イベント ----
 
-function showTab(tab) {
+// 結果とAI診断は同じページ(screen-result)。タブ「AI診断」は、そのページの下半分へスクロールする。
+const screenOf = (tab) => (tab === "report" ? "result" : tab);
+
+function reportTop() {
+  return $("sec-report").getBoundingClientRect().top + window.scrollY - document.querySelector(".header").offsetHeight - 8;
+}
+
+function setTab(tab) {
   state.tab = tab;
-  document.querySelectorAll(".screen").forEach((s) => s.classList.toggle("active", s.id === `screen-${tab}`));
   document.querySelectorAll(".tab").forEach((t) => t.setAttribute("aria-selected", t.dataset.tab === tab));
-  window.scrollTo({ top: 0 });
-  if (tab === "report" && !viewer && sample) {
+  $("fab-report").hidden = !(tab === "result" && sample);
+}
+
+function showTab(tab) {
+  const sameScreen = screenOf(tab) === screenOf(state.tab);
+  document.querySelectorAll(".screen").forEach((s) => s.classList.toggle("active", s.id === `screen-${screenOf(tab)}`));
+  setTab(tab);
+  const top = tab === "report" && sample ? reportTop() : 0;
+  window.scrollTo({ top, behavior: sameScreen ? "smooth" : "instant" });
+  if (screenOf(tab) === "result" && !viewer && sample) {
     try {
       viewer = createViewer();
     } catch (e) {
@@ -840,6 +854,13 @@ function showTab(tab) {
     }
   }
 }
+
+// スクロール位置に合わせて、下部タブの選択を「結果」「AI診断」で切り替える
+window.addEventListener("scroll", () => {
+  if (!sample || (state.tab !== "result" && state.tab !== "report")) return;
+  const next = $("sec-report").getBoundingClientRect().top < window.innerHeight * 0.45 ? "report" : "result";
+  if (next !== state.tab) setTab(next);
+}, { passive: true });
 
 document.addEventListener("click", (e) => {
   const t = e.target.closest("button");
@@ -856,6 +877,7 @@ document.addEventListener("click", (e) => {
   }
   if (t.dataset.tab) { showTab(t.dataset.tab); return; }
   if (t.dataset.goto) { showTab(t.dataset.goto); return; }
+  if (t.id === "fab-report") { showTab("report"); return; }
   if (t.dataset.heat) {
     state.heat = t.dataset.heat;
     renderHeatChips();

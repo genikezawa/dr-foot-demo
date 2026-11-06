@@ -541,7 +541,7 @@ main {
   color: rgba(255,255,255,0.72);
   margin-bottom: 18px;
 }
-.hero .cta { position: relative; margin-top: 0; }
+.hero .cta { position: relative; margin-top: 0; padding: 26px 20px; font-size: 17px; }
 .hero-meta {
   position: relative;
   display: flex;
@@ -731,6 +731,26 @@ main {
 .analyze li.ok i { border-color: var(--ok); background: var(--ok); }
 .analyze li.ok i::after { content: ""; position: absolute; left: 4px; top: 1px; width: 5px; height: 9px; border: solid var(--white); border-width: 0 2px 2px 0; transform: rotate(45deg); }
 
+/* ── FLOATING(結果 → AI診断) ── */
+.fab-wrap {
+  position: fixed; bottom: 78px; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: var(--max-w); z-index: 25;
+  display: flex; justify-content: flex-end; padding: 0 16px;
+  pointer-events: none;
+}
+.fab {
+  pointer-events: auto;
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: inherit; font-size: 13px; font-weight: 800;
+  color: var(--black); background: var(--gold);
+  border: none; border-radius: 28px; padding: 13px 18px 13px 20px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.22); cursor: pointer;
+}
+.fab[hidden] { display: none; }
+.fab svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; animation: bob 1.4s ease-in-out infinite; }
+@keyframes bob { 50% { transform: translateY(3px); } }
+@media (min-width: 640px) { .fab-wrap { bottom: 110px; } }
+
 /* ── TAB BAR ── */
 .tabs {
   position: fixed;
@@ -916,17 +936,11 @@ main {
       <button class="cta" data-goto="report">AI診断を見る(3D足型・診断文)</button>
       <button class="cta ghost" data-goto="order">この足型で靴をつくる</button>
       </div>
-    </section>
 
-    <!-- 診断(3D足型 + 寄与マップ + 診断文) -->
-    <section class="screen" id="screen-report">
-      <div class="empty-state">
-        <svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>
-        <b>まだAI診断がありません</b>
-        <p>両足をスキャンすると、3Dの足型と<br>あなたの足の診断文がここに表示されます。</p>
-        <button class="cta" data-goto="measure">足をスキャンする</button>
-      </div>
+      <!-- 診断(3D足型 + 寄与マップ + 診断文)。結果と同じページの下半分。下部タブの「AI診断」はここへスクロールする -->
       <div class="screen-body">
+      <div class="report-divider" style="margin-top:34px"></div>
+      <div id="sec-report">
       <p class="screen-label">AI DIAGNOSIS</p>
       <h1 class="screen-title">あなたの足の診断</h1>
 
@@ -948,6 +962,7 @@ main {
       <p class="disclaimer">
         本診断は足の形態から体質の傾向を示すもので、医療上の診断ではありません。痛みや変形が気になる場合は専門医にご相談ください。
       </p>
+      </div>
       </div>
     </section>
 
@@ -996,6 +1011,8 @@ main {
     </section>
 
   </main>
+
+  <div class="fab-wrap"><button class="fab" id="fab-report" hidden>AI診断へ<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button></div>
 
   <nav class="tabs" role="tablist">
     <button class="tab" role="tab" data-tab="home" aria-selected="true">

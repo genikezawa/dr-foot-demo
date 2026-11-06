@@ -85,8 +85,11 @@ const COLORS = [
   { id: "tan", name: "タン", hex: "#a8703f" },
 ];
 
-const state = { sample: 0, tab: "result", side: "right", heat: null, design: null, method: null, color: "black" };
+// sample が null のときは「はじめて(未スキャン)」の状態。scans は計測タブでスキャン済みの足。
+const state = { sample: 0, tab: "home", side: "right", heat: null, design: null, method: null, color: "black", scans: { right: true, left: true } };
 let dx, content, sample;
+// 未スキャンの状態から両足をスキャンし終えたときに、診断結果として使うサンプル
+const FIRST_RUN_SAMPLE = 0;
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
@@ -108,8 +111,23 @@ function recommendedDesign() {
   return "derby";
 }
 
+function footType() {
+  return [dx.rigidity, dx.thickness].filter((a) => a !== "standard")
+    .map((a) => (RIGIDITY_LABEL[a] ?? THICKNESS_LABEL[a]).replace("足", "")).join("・") || "標準";
+}
+
 function selectSample(i) {
   state.sample = i;
+  document.querySelector(".shell").classList.toggle("no-data", i === null);
+  if (i === null) {
+    sample = dx = content = null;
+    state.scans = { right: false, left: false };
+    renderSamples();
+    renderHome();
+    renderMeasure();
+    return;
+  }
+  state.scans = { right: true, left: true };
   sample = SAMPLES[i];
   dx = combine(sample);
   content = generateContent(sample, dx);
@@ -122,13 +140,68 @@ function selectSample(i) {
   renderHeatChips();
   renderReport();
   renderOrder();
+  renderHome();
+  renderMeasure();
   if (viewer) viewer.update();
 }
 
 function renderSamples() {
-  $("samples").innerHTML = SAMPLES.map(
+  $("samples").innerHTML = `<button class="sample-chip" data-sample="new" aria-pressed="${state.sample === null}">はじめて・未スキャン</button>` + SAMPLES.map(
     (s, i) => `<button class="sample-chip" data-sample="${i}" aria-pressed="${i === state.sample}">${s.name}・${s.tag}</button>`
   ).join("");
+}
+
+// ---- ホーム ----
+
+const today = (() => { const d = new Date(); return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`; })();
+const SIDE_LABEL = { right: "右足", left: "左足" };
+
+function renderHome() {
+  const nScanned = Object.values(state.scans).filter(Boolean).length;
+  $("hero-cta").textContent = sample ? "もう一度スキャンする" : nScanned ? "スキャンのつづきへ" : "スキャンをはじめる";
+  if (!sample) return;
+
+  const rec = recommendedSize();
+  const tags = CATEGORIES.filter((c) => dx.positives.has(c))
+    .map((c) => `<span class="tag pos">${CATEGORY_LABEL[c]}${SUSPECT_ONLY.has(c) ? "の疑い" : "の傾向"}</span>`);
+  if (!tags.length) tags.push('<span class="tag ok">目立つ所見なし</span>');
+  tags.push(`<span class="tag type">${footType()}タイプ</span>`);
+  $("latest").innerHTML = `
+    <div class="latest-head"><b>前回の診断</b><span>${today}</span></div>
+    <div class="latest-size"><b>${rec.cm.toFixed(1)}<small>cm</small></b><em>推奨サイズ・ウィズ ${rec.width}</em></div>
+    <div class="latest-tags">${tags.join("")}</div>
+    <button class="link-row" data-goto="result">計測結果と所見</button>
+    <button class="link-row" data-goto="report">3D足型とAI診断</button>`;
+
+  $("teaser-text").textContent = content.customReasons.length
+    ? "既製靴が合いにくい傾向があります。足型フィッティングでのオーダーがおすすめです。"
+    : `計測した ${rec.cm.toFixed(1)}cm / ${rec.width} で、既存の木型から選ぶイージーオーダーができます。`;
+}
+
+// ---- 計測(今のスキャナーアプリの Scan Right / Scan Left / Export を統合) ----
+
+function scannedFoot(side) {
+  if (!state.scans[side]) return null;
+  return (sample ?? SAMPLES[FIRST_RUN_SAMPLE])[side];
+}
+
+function renderMeasure() {
+  const n = Object.values(state.scans).filter(Boolean).length;
+  $("scan-progress").style.width = `${(n / 2) * 100}%`;
+  $("scan-count").textContent = `${n} / 2 足`;
+  $("scan-feet").innerHTML = ["right", "left"].map((side) => {
+    const m = scannedFoot(side);
+    return `<div class="scan-foot${m ? " done" : ""}">
+      <img src="img/guide_${side}.png" alt="">
+      <div class="side">${SIDE_LABEL[side]}</div>
+      <div class="state">${m ? `✓ 完了・足長 ${(m.length / 10).toFixed(1)}cm` : "未スキャン"}</div>
+      <button data-scan="${side}">${m ? "スキャンし直す" : "スキャンする"}</button>
+    </div>`;
+  }).join("");
+  $("analyze-btn").disabled = n < 2;
+  $("analyze-note").textContent = n < 2
+    ? `${n ? "もう片方の足" : "両足"}のスキャンが終わると、AIで診断できます。`
+    : sample ? `前回の診断: ${today}` : "両足のスキャンが終わりました。";
 }
 
 // ---- 結果 ----
@@ -245,8 +318,7 @@ function syncSee3d() {
 function renderOrder() {
   const rec = recommendedSize();
   const diffMM = Math.abs(sample.right.length - sample.left.length);
-  const type = [dx.rigidity, dx.thickness].filter((a) => a !== "standard")
-    .map((a) => (RIGIDITY_LABEL[a] ?? THICKNESS_LABEL[a]).replace("足", "")).join("・") || "標準";
+  const type = footType();
   $("order-spec").innerHTML = `
     <div><span>サイズ</span><b>${rec.cm.toFixed(1)}cm</b></div>
     <div><span>ウィズ</span><b>${rec.width}</b></div>
@@ -496,6 +568,262 @@ function createViewer() {
   return api;
 }
 
+// ---- ホームのヒーロー(平均足型の点群に走査線を当てる) ----
+
+function footPoints() {
+  // 平均足型の頂点を、中心0・足長1に揃えた座標で返す
+  const v = window.FOOT_DATA.v;
+  const V = v.length / 3;
+  const lo = [Infinity, Infinity, Infinity], hi = [-Infinity, -Infinity, -Infinity];
+  for (let i = 0; i < V; i++) for (let j = 0; j < 3; j++) { lo[j] = Math.min(lo[j], v[i * 3 + j]); hi[j] = Math.max(hi[j], v[i * 3 + j]); }
+  const s = 1 / (hi[2] - lo[2]);
+  const p = new Float32Array(V * 3);
+  for (let i = 0; i < V; i++) {
+    p[i * 3] = (v[i * 3] - (lo[0] + hi[0]) / 2) * s;
+    p[i * 3 + 1] = (v[i * 3 + 1] - lo[1]) * s - 0.12;
+    p[i * 3 + 2] = (v[i * 3 + 2] - (lo[2] + hi[2]) / 2) * s;
+  }
+  return { p, V };
+}
+
+const GOLD = [0.788, 0.659, 0.298];
+
+function pointsScene(el, size) {
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  el.appendChild(renderer.domElement);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(32, 1, 0.01, 20);
+  const { p, V } = footPoints();
+  const geom = new THREE.BufferGeometry();
+  geom.setAttribute("position", new THREE.BufferAttribute(p, 3));
+  const col = new Float32Array(V * 3);
+  geom.setAttribute("color", new THREE.BufferAttribute(col, 3));
+  const pts = new THREE.Points(geom, new THREE.PointsMaterial({ size, sizeAttenuation: false, vertexColors: true }));
+  scene.add(pts);
+  const resize = () => {
+    const w = el.clientWidth, h = el.clientHeight;
+    if (!w || !h) return;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  };
+  const ro = new ResizeObserver(resize);
+  ro.observe(el);
+  resize();
+  return {
+    renderer, scene, camera, geom, pts, p, V, col,
+    dispose() { ro.disconnect(); renderer.setAnimationLoop(null); geom.dispose(); renderer.dispose(); renderer.domElement.remove(); },
+  };
+}
+
+function createHero() {
+  const h = pointsScene($("hero-canvas"), 2.2);
+  h.camera.position.set(0, 0.42, 1.25);
+  h.camera.lookAt(0, 0.08, 0);
+  h.renderer.setAnimationLoop((t) => {
+    if (state.tab !== "home") return;
+    const sec = t / 1000;
+    h.pts.rotation.y = sec * 0.35;
+    const sweep = ((sec / 2.6) % 1) * 1.3 - 0.65;   // つま先→かかとへ走査線
+    for (let i = 0; i < h.V; i++) {
+      const d = (h.p[i * 3 + 2] - sweep) / 0.035;
+      const g = Math.exp(-d * d);
+      for (let j = 0; j < 3; j++) h.col[i * 3 + j] = GOLD[j] * 0.5 + (1 - GOLD[j] * 0.5) * g;
+    }
+    h.geom.attributes.color.needsUpdate = true;
+    h.renderer.render(h.scene, h.camera);
+  });
+}
+
+// ---- スキャン(実アプリの音声ガイドの文言を使った流れのデモ) ----
+
+const SCAN_STEPS = ["prep", "guide", "detect", "scan", "process", "done"];
+const SCAN_DOT = { prep: 0, guide: 0, detect: 1, scan: 2, process: 3, done: 3 };
+const SCAN_MS = 9000;
+const scan = { side: "right", step: 0, timers: [], view: null };
+
+function narration(key) {
+  const foot = SIDE_LABEL[scan.side];
+  const outer = scan.side === "right" ? "右" : "左";
+  const inner = scan.side === "right" ? "左" : "右";
+  return {
+    intro: `これから${foot}をスキャンします。音声ガイドに従って操作してください。まず、イスに座り、裸足の状態の${foot}を平らな床の上に置いてください。準備できましたら、次へ、を押してください。`,
+    align: `iPhoneを膝のところに持っていき、枠の中の半透明の足に、${foot}を重ねてください。できましたら、次へ、を押してください。`,
+    detect: `カメラを準備しています。iPhoneを${foot}の真上、およそ三十センチの高さで、そのまま静止させてください。`,
+    found: `${foot}を認識しました。スタートを押してください。`,
+    side: `これから${foot}の周りを、ゆっくりと二周します。iPhoneを${foot}の${outer}側、踵の高さまで下げてください。スキャン中は${foot}を動かさないでください。`,
+    toe: `つま先まで来ましたか？それではiPhoneを${foot}の${outer}側、踵の近くまで移動してください。`,
+    lap1: `一周目、お疲れ様でした。ここからは反対回りで進みます。iPhoneを少し低い位置に構え直して、${inner}側を通ってつま先の方向へ戻ってください。`,
+    lap2: "二周、お疲れ様でした。最後に踵の裏側だけもう一度撮影します。できるだけ低く構えて、踵の左右の側面を映してください。",
+    lap3: "確認できました。終了ボタンを押してください。",
+    processing: "三次元モデルを作成しています。完了するまで、そのままお待ちください。",
+    done: `${foot}のスキャンが完了しました。モデルを確認して、問題なければ、OKを押してください。`,
+  }[key];
+}
+
+function openScan(side) {
+  scan.side = side;
+  $("scan").classList.add("open");
+  $("scan-dots").innerHTML = "<i></i><i></i><i></i><i></i>";
+  goScanStep(0);
+}
+
+function clearScan() {
+  scan.timers.forEach((t) => { clearTimeout(t); cancelAnimationFrame(t); });
+  scan.timers = [];
+  scan.view?.dispose();
+  scan.view = null;
+}
+
+function closeScan() {
+  clearScan();
+  $("scan").classList.remove("open");
+}
+
+function finishScan() {
+  state.scans[scan.side] = true;
+  closeScan();
+  renderMeasure();
+  renderHome();
+}
+
+function scanButton(label, enabled = true) {
+  const b = $("scan-next");
+  b.textContent = label;
+  b.disabled = !enabled;
+}
+
+function goScanStep(i) {
+  clearScan();
+  scan.step = i;
+  const step = SCAN_STEPS[i];
+  $("scan-title").textContent = `${SIDE_LABEL[scan.side]}のスキャン`;
+  document.querySelectorAll("#scan-dots i").forEach((d, k) => d.classList.toggle("on", k <= SCAN_DOT[step]));
+  $("scan-skip").hidden = step === "done";
+  const stage = $("scan-stage");
+  const cap = (key) => { $("scan-caption").textContent = narration(key); };
+  const guide = (cls) => `<div class="floor"></div><img class="guide" src="img/guide_${scan.side}.png" alt=""><div class="frame ${cls}"></div>`;
+
+  if (step === "prep") {
+    stage.innerHTML = '<img class="chair" src="img/chair.png" alt="">';
+    cap("intro");
+    scanButton("次へ");
+  } else if (step === "guide") {
+    stage.innerHTML = guide("");
+    cap("align");
+    scanButton("次へ");
+  } else if (step === "detect") {
+    stage.innerHTML = guide("detecting");
+    cap("detect");
+    scanButton("認識中…", false);
+    scan.timers.push(setTimeout(() => {
+      stage.querySelector(".frame").className = "frame found";
+      cap("found");
+      scanButton("スタート");
+    }, 1800));
+  } else if (step === "scan") {
+    stage.innerHTML = `<div class="three"></div>
+      <div class="ring"><svg viewBox="0 0 64 64"><circle class="bg" cx="32" cy="32" r="27"/><circle class="fg" cx="32" cy="32" r="27" stroke-dasharray="169.6" stroke-dashoffset="169.6"/></svg><b>0%</b></div>
+      <div class="lap">1周目</div>`;
+    cap("side");
+    scanButton("終了", false);
+    startScanView(stage.querySelector(".three"), false);
+  } else if (step === "process") {
+    stage.innerHTML = '<div class="spinner"><i></i>3Dモデルを作成中</div>';
+    cap("processing");
+    scanButton("作成中…", false);
+    scan.timers.push(setTimeout(() => goScanStep(i + 1), 1800));
+  } else if (step === "done") {
+    const m = (sample ?? SAMPLES[FIRST_RUN_SAMPLE])[scan.side];
+    stage.innerHTML = `<div class="three"></div><div class="done-badge">足長<b>${(m.length / 10).toFixed(1)}</b>cm・足幅<b>${(m.width / 10).toFixed(1)}</b>cm</div>`;
+    cap("done");
+    scanButton("OK");
+    startScanView(stage.querySelector(".three"), true);
+  }
+}
+
+// スキャン中は、iPhoneが足のまわりを回る順(足の中心からの方位角)に点が現れる。完了後は全点を回転表示。
+function startScanView(el, complete) {
+  let v;
+  try { v = pointsScene(el, 2.6); } catch (e) { console.error(e); return; }
+  scan.view = v;
+  const mirror = scan.side === "left" ? -1 : 1;
+  v.pts.scale.x = mirror;
+  const order = Array.from({ length: v.V }, (_, k) => k)
+    .map((k) => [k, (Math.atan2(v.p[k * 3] * mirror, -v.p[k * 3 + 2]) + Math.PI * 2.5) % (Math.PI * 2)])
+    .sort((a, b) => a[1] - b[1]).map((a) => a[0]);
+  const rank = new Float32Array(v.V);
+  order.forEach((k, r) => { rank[k] = r / v.V; });
+  const t0 = performance.now();
+  const ringFg = $("scan-stage").querySelector(".fg");
+  const ringTxt = $("scan-stage").querySelector(".ring b");
+  const lap = $("scan-stage").querySelector(".lap");
+  let lastKey = "side";
+
+  v.renderer.setAnimationLoop(() => {
+    const t = performance.now();
+    const p = complete ? 1 : Math.min(Math.max((t - t0) / SCAN_MS, 0), 1);
+    // 1周目で約7割、2周目で残り、最後にかかと
+    const shown = complete ? 1 : p < 0.5 ? p / 0.5 * 0.7 : 0.7 + (p - 0.5) / 0.5 * 0.3;
+    for (let k = 0; k < v.V; k++) {
+      const age = shown - rank[k];
+      const c = v.col;
+      if (age < 0) { c[k * 3] = c[k * 3 + 1] = c[k * 3 + 2] = 0.16; continue; }
+      const flash = complete ? 0 : Math.exp(-age * 40);
+      for (let j = 0; j < 3; j++) c[k * 3 + j] = GOLD[j] + (1 - GOLD[j]) * flash;
+    }
+    v.geom.attributes.color.needsUpdate = true;
+    const ang = complete ? t / 2500 : -0.6 + p * Math.PI * 4 * 0.9;
+    const r = 1.85, hgt = complete ? 0.9 : 0.55 + 0.25 * Math.sin(p * Math.PI);
+    v.camera.position.set(Math.sin(ang) * r, hgt, Math.cos(ang) * r);
+    v.camera.lookAt(0, 0.05, 0);
+    v.renderer.render(v.scene, v.camera);
+    if (complete) return;
+
+    ringFg.setAttribute("stroke-dashoffset", (169.6 * (1 - p)).toFixed(1));
+    ringTxt.textContent = `${Math.round(p * 100)}%`;
+    lap.textContent = p < 0.5 ? "1周目" : p < 0.85 ? "2周目" : "かかと";
+    const key = p >= 1 ? "lap3" : p >= 0.85 ? "lap2" : p >= 0.5 ? "lap1" : p >= 0.22 ? "toe" : "side";
+    if (key !== lastKey) { lastKey = key; $("scan-caption").textContent = narration(key); }
+    if (p >= 1) { scanButton("終了"); v.renderer.setAnimationLoop(() => { v.renderer.render(v.scene, v.camera); }); }
+  });
+}
+
+function scanNext() {
+  const step = SCAN_STEPS[scan.step];
+  if (step === "done") finishScan();
+  else goScanStep(scan.step + 1);
+}
+
+// ---- AI解析 ----
+
+function runAnalysis() {
+  const items = [...document.querySelectorAll("#analyze-steps li")];
+  items.forEach((li) => { li.className = ""; });
+  $("analyzing").classList.add("open");
+  items.forEach((li, k) => {
+    setTimeout(() => {
+      if (k) items[k - 1].className = "ok";
+      li.className = "run";
+    }, k * 650);
+  });
+  setTimeout(() => {
+    items[items.length - 1].className = "ok";
+    setTimeout(() => {
+      $("analyzing").classList.remove("open");
+      if (state.sample === null) selectSample(FIRST_RUN_SAMPLE);
+      showTab("result");
+    }, 350);
+  }, items.length * 650);
+}
+
+function showModal(title, html) {
+  $("modal-title").textContent = title;
+  $("modal-text").innerHTML = html;
+  $("modal").classList.add("open");
+}
+
 // ---- タブ・イベント ----
 
 function showTab(tab) {
@@ -503,7 +831,7 @@ function showTab(tab) {
   document.querySelectorAll(".screen").forEach((s) => s.classList.toggle("active", s.id === `screen-${tab}`));
   document.querySelectorAll(".tab").forEach((t) => t.setAttribute("aria-selected", t.dataset.tab === tab));
   window.scrollTo({ top: 0 });
-  if (tab === "report" && !viewer) {
+  if (tab === "report" && !viewer && sample) {
     try {
       viewer = createViewer();
     } catch (e) {
@@ -516,7 +844,16 @@ function showTab(tab) {
 document.addEventListener("click", (e) => {
   const t = e.target.closest("button");
   if (!t) return;
-  if (t.dataset.sample) { selectSample(Number(t.dataset.sample)); return; }
+  if (t.dataset.sample) { selectSample(t.dataset.sample === "new" ? null : Number(t.dataset.sample)); return; }
+  if (t.dataset.scan) { openScan(t.dataset.scan); return; }
+  if (t.id === "scan-next") { scanNext(); return; }
+  if (t.id === "scan-skip") { goScanStep(SCAN_STEPS.indexOf("done")); return; }
+  if (t.id === "scan-close") { closeScan(); return; }
+  if (t.id === "analyze-btn") { runAnalysis(); return; }
+  if (t.id === "export-btn") {
+    showModal("スキャンデータの書き出し", "両足の3Dモデル(OBJ / USDZ)をZIPにまとめて、AirDropやファイルに保存できます。<br>これはデモ画面のため、実際のファイルは作成されません。");
+    return;
+  }
   if (t.dataset.tab) { showTab(t.dataset.tab); return; }
   if (t.dataset.goto) { showTab(t.dataset.goto); return; }
   if (t.dataset.heat) {
@@ -536,13 +873,18 @@ document.addEventListener("click", (e) => {
   if (t.dataset.design) { state.design = t.dataset.design; renderOrder(); return; }
   if (t.dataset.method) { state.method = t.dataset.method; renderOrder(); return; }
   if (t.dataset.color) { state.color = t.dataset.color; renderOrder(); return; }
-  if (t.id === "order-btn") { $("modal").classList.add("open"); return; }
+  if (t.id === "order-btn") {
+    showModal("ご注文ありがとうございます", "これはデモ画面のため、実際の注文は送信されていません。<br>本番では、足型データと注文内容が工房に届き、仮縫いの準備に入ります。");
+    return;
+  }
   if (t.id === "modal-close") { $("modal").classList.remove("open"); return; }
 });
 $("modal").addEventListener("click", (e) => { if (e.target.id === "modal") e.currentTarget.classList.remove("open"); });
 
-const qs = Number(new URLSearchParams(location.search).get("s"));
-selectSample(SAMPLES[qs] ? qs : 0);
+const qsRaw = new URLSearchParams(location.search).get("s");
+const qs = Number(qsRaw);
+selectSample(qsRaw === "new" ? null : SAMPLES[qs] ? qs : 0);
+try { createHero(); } catch (e) { console.error(e); }
 // 旧URL(#3d・#text)は統合した診断画面に寄せる
 const hashTab = { "3d": "report", text: "report" }[location.hash.slice(1)] ?? location.hash.slice(1);
-if (["result", "report", "order"].includes(hashTab)) showTab(hashTab);
+if (["home", "measure", "result", "report", "order"].includes(hashTab)) showTab(hashTab);

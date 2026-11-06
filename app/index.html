@@ -500,6 +500,237 @@ main {
 .sheet h3 { font-size: 19px; font-weight: 800; margin-bottom: 10px; }
 .sheet p { font-size: 13px; line-height: 1.8; color: var(--sub); margin-bottom: 18px; }
 
+/* ── HOME ── */
+.hero {
+  position: relative;
+  background: radial-gradient(ellipse at 70% 30%, #2a2618 0%, #0d0d0d 62%);
+  color: var(--white);
+  border-radius: 22px;
+  overflow: hidden;
+  padding: 22px 20px 20px;
+  margin-bottom: 16px;
+}
+.hero-canvas {
+  position: relative;
+  height: 170px;
+  margin: -22px -20px 4px;
+  pointer-events: none;
+}
+.hero-canvas canvas { display: block; width: 100%; height: 100%; }
+.hero-eyebrow {
+  position: relative;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+.hero h1 {
+  position: relative;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.42;
+  letter-spacing: -0.01em;
+  margin-bottom: 12px;
+  white-space: nowrap;
+}
+.hero p {
+  position: relative;
+  font-size: 13px;
+  line-height: 1.75;
+  color: rgba(255,255,255,0.72);
+  margin-bottom: 18px;
+}
+.hero .cta { position: relative; margin-top: 0; }
+.hero-meta {
+  position: relative;
+  display: flex;
+  gap: 14px;
+  margin-top: 14px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.55);
+}
+.hero-meta span::before { content: "✓ "; color: var(--gold); }
+
+.latest-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+.latest-head b { font-size: 13px; font-weight: 700; }
+.latest-head span { font-size: 11px; color: var(--label); }
+.latest-size { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; }
+.latest-size b { font-size: 34px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+.latest-size small { font-size: 14px; font-weight: 700; }
+.latest-size em { font-style: normal; font-size: 12px; color: var(--sub); }
+.latest-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.tag { font-size: 11px; font-weight: 700; border-radius: 10px; padding: 4px 9px; }
+.tag.pos { color: var(--warm); background: var(--warm-bg); }
+.tag.ok { color: var(--ok); background: var(--ok-bg); }
+.tag.type { color: var(--black); background: var(--gold-bg); border: 1px solid #ecdcae; }
+.link-row {
+  display: flex; justify-content: space-between; align-items: center;
+  width: 100%;
+  font-family: inherit; font-size: 13px; font-weight: 700; color: var(--black);
+  background: var(--surface); border: none; border-radius: 10px;
+  padding: 11px 14px; cursor: pointer;
+}
+.link-row::after { content: "›"; font-size: 18px; line-height: 1; color: var(--label); }
+.link-row + .link-row { margin-top: 8px; }
+
+.section-title { font-size: 15px; font-weight: 800; margin: 24px 0 12px; }
+.learn { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.learn div { background: var(--surface); border-radius: 12px; padding: 14px 12px; }
+.learn svg { width: 26px; height: 26px; stroke: var(--black); fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 8px; }
+.learn b { display: block; font-size: 13px; margin-bottom: 3px; }
+.learn span { font-size: 11px; line-height: 1.6; color: var(--sub); }
+
+.steps3 { display: grid; gap: 0; }
+.steps3 div { display: grid; grid-template-columns: 34px 1fr auto; gap: 10px; align-items: center; padding: 11px 0; border-top: 1px solid var(--line); }
+.steps3 div:first-child { border-top: none; }
+.steps3 i { width: 28px; height: 28px; border-radius: 50%; background: var(--black); color: var(--gold); font-style: normal; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.steps3 b { font-size: 13px; }
+.steps3 span { font-size: 11px; color: var(--label); white-space: nowrap; }
+
+.teaser { display: grid; grid-template-columns: 72px 1fr; gap: 12px; align-items: center; }
+.teaser img { width: 72px; height: 72px; border-radius: 12px; border: 1px solid var(--line); object-fit: cover; }
+.teaser b { display: block; font-size: 14px; margin-bottom: 3px; }
+.teaser span { font-size: 12px; line-height: 1.6; color: var(--sub); }
+
+/* ── MEASURE ── */
+.progress-line { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--sub); margin-bottom: 14px; }
+.progress-line .track { flex: 1; height: 6px; border-radius: 3px; background: var(--surface); overflow: hidden; }
+.progress-line .track span { display: block; height: 100%; background: var(--gold); border-radius: 3px; transition: width 0.4s ease; }
+.scan-feet { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.scan-foot {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px 12px 12px;
+  text-align: center;
+  background: var(--white);
+}
+.scan-foot.done { border-color: #cfe5d9; background: linear-gradient(180deg, var(--ok-bg), var(--white) 60%); }
+.scan-foot img { width: 64px; height: 64px; margin: 0 auto 6px; display: block; opacity: 0.85; }
+.scan-foot .side { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+.scan-foot .state { font-size: 11px; font-weight: 700; color: var(--label); margin-bottom: 10px; min-height: 16px; }
+.scan-foot.done .state { color: var(--ok); }
+.scan-foot button {
+  width: 100%;
+  font-family: inherit; font-size: 13px; font-weight: 800;
+  border-radius: 20px; padding: 9px 0; cursor: pointer;
+  background: var(--black); color: var(--white); border: 1.5px solid var(--black);
+}
+.scan-foot.done button { background: var(--white); color: var(--black); }
+.cta:disabled { background: var(--line); color: var(--label); cursor: not-allowed; }
+.cta-note { font-size: 11px; color: var(--label); text-align: center; margin: 8px 0 4px; }
+.needs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px; color: var(--sub); }
+.needs div { display: flex; align-items: center; gap: 8px; }
+.needs i { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex: 0 0 auto; }
+.text-link {
+  display: block; margin: 18px auto 0;
+  font-family: inherit; font-size: 12px; font-weight: 600; color: var(--sub);
+  background: none; border: none; text-decoration: underline; cursor: pointer;
+}
+
+/* empty state(未スキャン) */
+.empty-state { display: none; text-align: center; padding: 48px 12px 24px; }
+.empty-state svg { width: 56px; height: 56px; stroke: var(--label); fill: none; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 14px; }
+.empty-state b { display: block; font-size: 16px; margin-bottom: 8px; }
+.empty-state p { font-size: 13px; line-height: 1.7; color: var(--sub); margin-bottom: 20px; }
+.shell.no-data .empty-state { display: block; }
+.shell.no-data .screen-body { display: none; }
+.shell:not(.no-data) .first-only { display: none; }
+.shell.no-data .data-only { display: none; }
+
+/* ── SCAN FLOW(全画面) ── */
+.scan {
+  position: fixed; inset: 0; z-index: 60;
+  display: none;
+  justify-content: center;
+  background: #000;
+}
+.scan.open { display: flex; }
+.scan-inner {
+  width: 100%; max-width: var(--max-w);
+  display: flex; flex-direction: column;
+  color: var(--white);
+  background: #0b0b0b;
+  padding: 14px 16px calc(18px + env(safe-area-inset-bottom));
+  min-height: 100svh;
+}
+.scan-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.scan-top b { font-size: 15px; font-weight: 800; }
+.scan-x {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: none; background: rgba(255,255,255,0.12); color: var(--white);
+  font-size: 18px; line-height: 1; cursor: pointer;
+}
+.scan-dots { display: flex; gap: 5px; }
+.scan-dots i { width: 18px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.2); }
+.scan-dots i.on { background: var(--gold); }
+.scan-stage {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 18px;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 55%, #3a3a37 0%, #161616 75%);
+  margin-bottom: 14px;
+}
+.scan-stage > * { position: absolute; inset: 0; }
+.scan-stage img.chair { width: 100%; height: 100%; object-fit: cover; filter: invert(1); opacity: 0.8; }
+.scan-stage .floor {
+  background:
+    linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px) 0 0 / 28px 28px;
+  transform: perspective(500px) rotateX(38deg) scale(1.5);
+  transform-origin: 50% 80%;
+}
+.scan-stage img.guide {
+  width: 70%; height: 70%; left: 15%; top: 15%;
+  filter: invert(1);
+  opacity: 0.55;
+  mix-blend-mode: screen;
+}
+.scan-stage .frame { left: 14%; top: 10%; width: 72%; height: 80%; border-radius: 14px; }
+.scan-stage .frame::before, .scan-stage .frame::after {
+  content: ""; position: absolute; inset: 0; border-radius: 14px;
+  border: 2px dashed rgba(255,255,255,0.35);
+}
+.scan-stage .frame.detecting::after { border: 2px solid var(--gold); animation: pulse 1s ease-in-out infinite; }
+.scan-stage .frame.found::after { border: 2.5px solid #58c48f; animation: none; }
+@keyframes pulse { 50% { opacity: 0.25; transform: scale(0.97); } }
+.scan-stage .three canvas { display: block; width: 100%; height: 100%; }
+.ring { left: auto; top: 12px; right: 12px; inset-inline-start: auto; width: 64px; height: 64px; }
+.ring svg { width: 64px; height: 64px; transform: rotate(-90deg); }
+.ring circle { fill: none; stroke-width: 5; }
+.ring .bg { stroke: rgba(255,255,255,0.15); }
+.ring .fg { stroke: var(--gold); stroke-linecap: round; transition: stroke-dashoffset 0.15s linear; }
+.ring b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; }
+.lap { inset: auto auto 12px 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: var(--gold); background: rgba(0,0,0,0.5); border-radius: 10px; padding: 4px 9px; height: auto; width: auto; }
+.spinner { display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 14px; font-size: 13px; color: rgba(255,255,255,0.75); }
+.spinner i { width: 44px; height: 44px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.15); border-top-color: var(--gold); animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.done-badge { inset: auto 0 14px 0; text-align: center; height: auto; font-size: 13px; color: rgba(255,255,255,0.85); }
+.done-badge b { font-size: 30px; font-weight: 800; color: var(--white); margin: 0 2px; }
+.scan-caption {
+  display: flex; gap: 10px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 13px; line-height: 1.75; color: rgba(255,255,255,0.88);
+  min-height: 96px;
+}
+.scan-caption svg { width: 18px; height: 18px; flex: 0 0 auto; margin-top: 3px; stroke: var(--gold); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.scan-actions { margin-top: auto; padding-top: 14px; }
+.scan-actions .cta:disabled { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.4); }
+.scan-skip { display: block; margin: 10px auto 0; font-family: inherit; font-size: 12px; color: rgba(255,255,255,0.5); background: none; border: none; cursor: pointer; text-decoration: underline; }
+
+/* 解析中シート */
+.analyze { list-style: none; text-align: left; display: grid; gap: 10px; margin: 4px 0 6px; }
+.analyze li { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--label); transition: color 0.2s; }
+.analyze li i { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--line); flex: 0 0 auto; position: relative; }
+.analyze li.run { color: var(--black); }
+.analyze li.run i { border-color: var(--gold); border-top-color: transparent; animation: spin 0.8s linear infinite; }
+.analyze li.ok { color: var(--black); }
+.analyze li.ok i { border-color: var(--ok); background: var(--ok); }
+.analyze li.ok i::after { content: ""; position: absolute; left: 4px; top: 1px; width: 5px; height: 9px; border: solid var(--white); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+
 /* ── TAB BAR ── */
 .tabs {
   position: fixed;
@@ -514,7 +745,7 @@ main {
   -webkit-backdrop-filter: blur(16px);
   border-top: 1px solid var(--line);
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   padding: 6px 4px calc(8px + env(safe-area-inset-bottom));
 }
 .tab {
@@ -562,8 +793,103 @@ main {
 
   <main>
 
+    <!-- ホーム -->
+    <section class="screen active" id="screen-home">
+      <div class="hero">
+        <div class="hero-canvas" id="hero-canvas"></div>
+        <p class="hero-eyebrow">3D FOOT DIAGNOSIS</p>
+        <h1>足をスキャンして、<br>あなたの足を知る。</h1>
+        <p>iPhoneで両足をスキャンするだけ。サイズとウィズの計測から、足の形の所見、靴選びの指針までAIがお伝えします。</p>
+        <button class="cta" data-goto="measure" id="hero-cta">スキャンをはじめる</button>
+        <div class="hero-meta"><span>片足 約2分</span><span>オンデバイスAI</span><span>無料</span></div>
+      </div>
+
+      <div class="card data-only" id="latest"></div>
+
+      <div class="first-only">
+        <h2 class="section-title">診断でわかること</h2>
+        <div class="learn">
+          <div>
+            <svg viewBox="0 0 24 24"><path d="M3 8h18v8H3z"/><path d="M7 8v3M11 8v4M15 8v3M19 8v4"/></svg>
+            <b>サイズ・ウィズ</b><span>足長・足幅・足囲から、JIS規格のサイズとウィズを計測</span>
+          </div>
+          <div>
+            <svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>
+            <b>足の形の所見</b><span>外反母趾・扁平足・ハイアーチ・内転足の傾向をAIが判定</span>
+          </div>
+          <div>
+            <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 12h16M12 4v16"/><circle cx="16" cy="8" r="1.6"/></svg>
+            <b>足のタイプ</b><span>かたさ・厚みの2軸で、あなたの足の体質を分類</span>
+          </div>
+          <div>
+            <svg viewBox="0 0 24 24"><path d="M3 16c0-2 1-3 3-3.5l4-1 3-4c1-1 2-1 3 0l1 2c.5 1 1.5 1.5 2.5 1.5H20a1 1 0 011 1V17a1 1 0 01-1 1H4a1 1 0 01-1-1z"/></svg>
+            <b>靴選びの指針</b><span>あなたの足に合う靴のつくりと、気をつけたいポイント</span>
+          </div>
+        </div>
+
+        <h2 class="section-title">かんたん3ステップ</h2>
+        <div class="card"><div class="steps3">
+          <div><i>1</i><b>両足をスキャン</b><span>約2分 × 2</span></div>
+          <div><i>2</i><b>AIが足の形を解析</b><span>約30秒</span></div>
+          <div><i>3</i><b>結果を見て、靴をつくる</b><span>任意</span></div>
+        </div></div>
+      </div>
+
+      <div class="data-only">
+        <h2 class="section-title">あなたへのおすすめ</h2>
+        <div class="card">
+          <div class="teaser">
+            <img src="../shoe_order.png" alt="">
+            <div><b id="teaser-title">あなたの足型で靴をつくる</b><span id="teaser-text"></span></div>
+          </div>
+          <button class="cta ghost" data-goto="order" style="margin-top:14px">靴のデザインを見る</button>
+        </div>
+      </div>
+
+      <p class="disclaimer">本アプリの診断は足の形態から体質の傾向を示すもので、医療上の診断ではありません。</p>
+    </section>
+
+    <!-- 計測(今のスキャナーアプリの画面を統合) -->
+    <section class="screen" id="screen-measure">
+      <p class="screen-label">MEASURE</p>
+      <h1 class="screen-title">足をスキャンする</h1>
+
+      <div class="progress-line"><div class="track"><span id="scan-progress"></span></div><b id="scan-count"></b></div>
+      <div class="scan-feet" id="scan-feet"></div>
+
+      <button class="cta" id="analyze-btn">AIで診断する</button>
+      <p class="cta-note" id="analyze-note"></p>
+
+      <h2 class="section-title">用意するもの</h2>
+      <div class="card">
+        <div class="needs">
+          <div><i></i>LiDAR搭載のiPhone</div>
+          <div><i></i>イス</div>
+          <div><i></i>明るい部屋</div>
+          <div><i></i>裸足(靴下を脱ぐ)</div>
+        </div>
+      </div>
+
+      <h2 class="section-title">スキャンのながれ</h2>
+      <div class="card"><div class="flow">
+        <div class="flow-step"><div class="flow-rail"><i></i></div><div class="flow-body"><b>イスに座り、足を床に置く</b><span>平らな床に、裸足の足をまっすぐ置きます。</span></div></div>
+        <div class="flow-step"><div class="flow-rail"><i></i></div><div class="flow-body"><b>ガイドに足を合わせる</b><span>画面の足のイラストに、真上から足を重ねます。</span></div></div>
+        <div class="flow-step"><div class="flow-rail"><i></i></div><div class="flow-body"><b>足のまわりをゆっくり2周</b><span>音声ガイドに合わせて、外側→つま先→内側→かかとの順に回ります。最後にかかとの裏を撮ります。</span></div></div>
+        <div class="flow-step"><div class="flow-rail"><i></i></div><div class="flow-body"><b>3Dモデルを作成</b><span>iPhoneの中で足の3Dモデルをつくります。データは外部に送信されません。</span></div></div>
+      </div></div>
+
+      <button class="text-link data-only" id="export-btn">スキャンデータを書き出す(OBJ / USDZ)</button>
+    </section>
+
     <!-- 結果 -->
-    <section class="screen active" id="screen-result">
+    <section class="screen" id="screen-result">
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        <b>まだ診断結果がありません</b>
+        <p>両足をスキャンすると、サイズ・ウィズと<br>AIによる足の所見がここに表示されます。</p>
+        <button class="cta" data-goto="measure">足をスキャンする</button>
+      </div>
+      <div class="screen-body">
       <p class="screen-label">RESULT</p>
       <h1 class="screen-title">足型診断レポート</h1>
 
@@ -589,10 +915,18 @@ main {
 
       <button class="cta" data-goto="report">AI診断を見る(3D足型・診断文)</button>
       <button class="cta ghost" data-goto="order">この足型で靴をつくる</button>
+      </div>
     </section>
 
     <!-- 診断(3D足型 + 寄与マップ + 診断文) -->
     <section class="screen" id="screen-report">
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>
+        <b>まだAI診断がありません</b>
+        <p>両足をスキャンすると、3Dの足型と<br>あなたの足の診断文がここに表示されます。</p>
+        <button class="cta" data-goto="measure">足をスキャンする</button>
+      </div>
+      <div class="screen-body">
       <p class="screen-label">AI DIAGNOSIS</p>
       <h1 class="screen-title">あなたの足の診断</h1>
 
@@ -614,10 +948,18 @@ main {
       <p class="disclaimer">
         本診断は足の形態から体質の傾向を示すもので、医療上の診断ではありません。痛みや変形が気になる場合は専門医にご相談ください。
       </p>
+      </div>
     </section>
 
     <!-- 注文 -->
     <section class="screen" id="screen-order">
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24"><path d="M3 16c0-2 1-3 3-3.5l4-1 3-4c1-1 2-1 3 0l1 2c.5 1 1.5 1.5 2.5 1.5H20a1 1 0 011 1V17a1 1 0 01-1 1H4a1 1 0 01-1-1z"/><path d="M3 18.5h18"/></svg>
+        <b>先に足をスキャンしてください</b>
+        <p>スキャンした足型をもとに、<br>あなたの足に合わせた靴をつくれます。</p>
+        <button class="cta" data-goto="measure">足をスキャンする</button>
+      </div>
+      <div class="screen-body">
       <p class="screen-label">ORDER</p>
       <h1 class="screen-title">あなたの足型で靴をつくる</h1>
 
@@ -650,12 +992,19 @@ main {
       </div>
       <button class="cta" id="order-btn">この内容で注文する</button>
       <p class="disclaimer">価格・納期・デザインはデモ用の仮の表示です。</p>
+      </div>
     </section>
 
   </main>
 
   <nav class="tabs" role="tablist">
-    <button class="tab" role="tab" data-tab="result" aria-selected="true">
+    <button class="tab" role="tab" data-tab="home" aria-selected="true">
+      <svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a1 1 0 01-1 1h-4v-6H9v6H5a1 1 0 01-1-1z"/></svg>ホーム
+    </button>
+    <button class="tab" role="tab" data-tab="measure" aria-selected="false">
+      <svg viewBox="0 0 24 24"><path d="M4 8V5a1 1 0 011-1h3M16 4h3a1 1 0 011 1v3M20 16v3a1 1 0 01-1 1h-3M8 20H5a1 1 0 01-1-1v-3"/><path d="M10 8.5c0-1 .7-1.5 1.5-1.5S13 7.6 13 8.5c0 1.6-1 2.3-1 3.8 0 1.4 1.4 2 1.4 3.4 0 .9-.7 1.6-1.8 1.6S10 16.6 10 15.5c0-2 .8-2.6.8-4.2 0-1.2-.8-1.6-.8-2.8z"/></svg>計測
+    </button>
+    <button class="tab" role="tab" data-tab="result" aria-selected="false">
       <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>結果
     </button>
     <button class="tab" role="tab" data-tab="report" aria-selected="false">
@@ -669,9 +1018,42 @@ main {
 
 <div class="modal" id="modal" role="dialog" aria-modal="true">
   <div class="sheet">
-    <h3>ご注文ありがとうございます</h3>
-    <p>これはデモ画面のため、実際の注文は送信されていません。<br>本番では、足型データと注文内容が工房に届き、仮縫いの準備に入ります。</p>
+    <h3 id="modal-title">ご注文ありがとうございます</h3>
+    <p id="modal-text">これはデモ画面のため、実際の注文は送信されていません。<br>本番では、足型データと注文内容が工房に届き、仮縫いの準備に入ります。</p>
     <button class="cta" id="modal-close">閉じる</button>
+  </div>
+</div>
+
+<!-- AI解析中 -->
+<div class="modal" id="analyzing" role="dialog" aria-modal="true">
+  <div class="sheet">
+    <h3>AIが足の形を解析しています</h3>
+    <ul class="analyze" id="analyze-steps">
+      <li><i></i>スキャンを3Dメッシュに変換</li>
+      <li><i></i>サイズ・ウィズを計測</li>
+      <li><i></i>足の形の所見をAIで判定</li>
+      <li><i></i>診断レポートを作成</li>
+    </ul>
+  </div>
+</div>
+
+<!-- スキャン(全画面。実アプリの ScanView の流れを模したもの) -->
+<div class="scan" id="scan" role="dialog" aria-modal="true">
+  <div class="scan-inner">
+    <div class="scan-top">
+      <button class="scan-x" id="scan-close" aria-label="スキャンをやめる">×</button>
+      <b id="scan-title"></b>
+      <div class="scan-dots" id="scan-dots"></div>
+    </div>
+    <div class="scan-stage" id="scan-stage"></div>
+    <div class="scan-caption">
+      <svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 010 6M18.5 6.5a8 8 0 010 11"/></svg>
+      <span id="scan-caption"></span>
+    </div>
+    <div class="scan-actions">
+      <button class="cta" id="scan-next"></button>
+      <button class="scan-skip" id="scan-skip">デモを早送り</button>
+    </div>
   </div>
 </div>
 

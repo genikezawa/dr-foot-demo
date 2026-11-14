@@ -111,8 +111,20 @@ function recommendedDesign() {
   return "derby";
 }
 
+// 「あなたの足のタイプ」の見せ方(2026-11-15)。硬さは荷重差を測れないので判定せず、表示だけに使う:
+// ハイアーチ → かたい、扁平足なし → 標準。扁平足のときは図を出さず、厚さの度合いを文だけで示す。
+function typeDisplay() {
+  const high = dx.positives.has("high_arch"), flat = dx.positives.has("flat_arch");
+  if (flat && (!high || dx.confidence.flat_arch > dx.confidence.high_arch)) return { grid: false };
+  return { grid: true, stiff: high };
+}
+
 function footType() {
-  return dx.thickness === "standard" ? "標準" : THICKNESS_LABEL[dx.thickness].replace("足", "");
+  const t = dx.thickness === "standard" ? null : THICKNESS_LABEL[dx.thickness].replace("足", "");
+  const d = typeDisplay();
+  if (!d.grid) return t || "厚さ標準";
+  const parts = [d.stiff ? "かたい" : null, t].filter(Boolean);
+  return parts.length ? parts.join("・") : "標準";
 }
 
 function selectSample(i) {
@@ -230,15 +242,35 @@ function renderResult() {
     </div>`;
   }).join("");
 
-  // 体質マップ: 縦=厚み(あつい↑ うすい↓)の1軸
-  const rows = [["thick", "あつい"], ["standard", "標準"], ["thin", "うすい"]];
-  const html = rows.map(([r, name]) => `<div class="cell${dx.thickness === r ? " on" : ""}">${name}</div>`).join("");
-  $("const-grid").innerHTML = html;
-
+  // 体質マップ: 硬さ(列: かたい/標準/やわらかい)×厚み(行)。扁平足のときは図を出さず文のみ
+  const td = typeDisplay();
+  const grid = $("const-grid");
+  grid.style.display = td.grid ? "" : "none";
   const thkFeature = dx.thickness === "standard" ? "" : esc(content.feature.at(-1));
-  $("const-summary").innerHTML = dx.thickness !== "standard"
-    ? `あなたは<b>「${THICKNESS_LABEL[dx.thickness]}」</b>タイプです。${thkFeature}`
-    : `あなたは<b>標準</b>タイプです。体質的な偏りが小さく、標準的なバランスの足です。`;
+  if (td.grid) {
+    const cols = ["stiff", "standard", "soft"];
+    const rows = ["thick", "standard", "thin"];
+    const name = (r, c) => {
+      const t = r === "thick" ? "あつい" : r === "thin" ? "うすい" : "";
+      const g = c === "stiff" ? "かたい" : c === "soft" ? "やわらかい" : "";
+      if (!t && !g) return "標準";
+      if (!t) return g;
+      if (!g) return t;
+      return `${g}く<br>${t}`;
+    };
+    const onCol = td.stiff ? "stiff" : "standard";
+    grid.innerHTML = rows.map((r) => cols.map((c) =>
+      `<div class="cell${dx.thickness === r && c === onCol ? " on" : ""}">${name(r, c)}</div>`).join("")).join("")
+      + `<div class="axis-x"><span>かたい</span><span>← 硬さ →</span><span>やわらかい</span></div>`;
+    $("const-summary").innerHTML = footType() === "標準"
+      ? `あなたは<b>標準</b>タイプです。体質的な偏りが小さく、標準的なバランスの足です。`
+      : `あなたは<b>「${footType()}足」</b>タイプです。${thkFeature}`;
+  } else {
+    const lead = dx.thickness === "thick" ? "足の厚さ(足幅に対する足囲)は、平均より厚めです。"
+      : dx.thickness === "thin" ? "足の厚さ(足幅に対する足囲)は、平均より薄めです。"
+      : "足の厚さ(足幅に対する足囲)は、平均的です。";
+    $("const-summary").innerHTML = `${lead}あなたは<b>「${footType()}${dx.thickness === "standard" ? "" : "足"}」</b>タイプです。${thkFeature}`;
+  }
 }
 
 // ---- 診断文 ----

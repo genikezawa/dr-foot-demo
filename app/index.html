@@ -228,8 +228,8 @@ main {
 .const-wrap { display: grid; grid-template-columns: 1fr; gap: 12px; }
 .const-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: repeat(3, 40px);
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 52px) auto;
   gap: 4px;
   font-size: 11px;
 }
@@ -251,6 +251,13 @@ main {
   font-weight: 700;
   font-size: 11px;
   box-shadow: 0 0 0 3px var(--gold);
+}
+.axis-x {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  color: var(--label);
+  font-size: 10px;
 }
 .axis-y {
   writing-mode: vertical-rl;

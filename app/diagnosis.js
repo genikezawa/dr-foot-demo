@@ -83,7 +83,7 @@ export function jisWidthCode(footLengthMM, girthMM, gender) {
   return t.symbols[i < 0 ? t.symbols.length - 1 : i];
 }
 
-// ---- 体質軸(§5) ----
+// ---- 体質軸(§5): 厚みの1軸のみ。硬さ(かたい/やわらかい)は荷重差を測れないため判定しない(2026-11-15) ----
 
 const THICKNESS_THIN_MM = -9.7;
 const THICKNESS_THICK_MM = -1.0;
@@ -107,24 +107,18 @@ export function combine(sample) {
     }
   }
 
-  let rigidity = "standard";
-  const hi = positives.has("high_arch"), fl = positives.has("flat_arch");
-  if (hi && fl) rigidity = confidence.high_arch >= confidence.flat_arch ? "stiff" : "soft";
-  else if (hi) rigidity = "stiff";
-  else if (fl || positives.has("hallux_valgus")) rigidity = "soft";
-
   const residuals = [sample.right, sample.left].map((m) => thicknessResidualMM(m, sample.gender));
   const avg = residuals.reduce((a, b) => a + b, 0) / residuals.length;
   const thickness = avg > THICKNESS_THICK_MM ? "thick" : avg < THICKNESS_THIN_MM ? "thin" : "standard";
 
   const splayFoot = [sample.right, sample.left].some((m) => m.width / m.length >= SPLAY_WIDTH_RATIO);
 
-  return { positives, confidence, rigidity, thickness, thicknessResidual: avg, splayFoot };
+  return { positives, confidence, thickness, thicknessResidual: avg, splayFoot };
 }
 
 // ---- 診断文(§6・§7) ----
 
-const STIFF_FUTURE = [
+const HIGH_ARCH_FUTURE = [
   ["足の指が反り返る(浮きゆび)"],
   ["指の関節が曲がって固まる(ハンマートゥ)"],
   ["爪先が靴に当たって削れる"],
@@ -133,7 +127,7 @@ const STIFF_FUTURE = [
   ["肩こり・腰痛・頭痛"],
   ["歩行が不安定になる、着地音が大きくなる"],
 ];
-const SOFT_FUTURE = [
+const FLAT_ARCH_FUTURE = [
   ["親指の付け根が外側に傾く(外反母趾)", "hallux_valgus"],
   ["小指の付け根が内側に傾く(内反小趾)"],
   ["指の付け根の幅が広がる(開張足)"],
@@ -144,6 +138,14 @@ const SOFT_FUTURE = [
   ["猫背・反り腰、ペタペタと歩く"],
   ["捻挫やつまずきが多い"],
   ["膝・腰・股関節の痛み、首こり・肩こり"],
+];
+const HALLUX_FUTURE = [
+  ["親指の付け根の痛み、靴に当たって赤くなる・腫れる"],
+  ["小指の付け根が内側に傾く(内反小趾)"],
+  ["指の付け根の幅が広がる(開張足)"],
+  ["タコ・魚の目ができやすい"],
+  ["巻き爪や爪の変形"],
+  ["膝・腰の痛み、首こり・肩こり"],
 ];
 const THICK_FUTURE = [
   ["足の指が反り返る(浮きゆび)"],
@@ -160,16 +162,22 @@ const THIN_FUTURE = [
   ["猫背・反り腰、腰痛・膝痛・肩こり、偏頭痛"],
 ];
 
-const RIGIDITY_CONTENT = {
-  stiff: {
-    feature: "体重がかかっても形が変わりにくい、支持性の高い足です。土踏まずが高く、標準より小さい接地面積で体を支えています。",
-    future: STIFF_FUTURE,
+// 診断(陽性)ごとの説明。硬さは測っていないため「かたい足/やわらかい足」とは呼ばない
+const DIAGNOSIS_CONTENT = {
+  high_arch: {
+    feature: "土踏まずが高く、標準より小さい接地面積で体を支えている形状です。",
+    future: HIGH_ARCH_FUTURE,
     mechanism: "接地面積が小さいぶん、足裏の一部に圧力が集中します。また衝撃を吸収するための初期の回内(足が内側に倒れ込む動き)が起きにくいため、足で吸収しきれなかった衝撃が膝・腰・首など上の関節に回りやすくなります。",
   },
-  soft: {
-    feature: "体重がかかると形が変わりやすい、しなやかな足です。立っているときと足を浮かせたときで、足幅や足囲の寸法が大きく変わります。",
-    future: SOFT_FUTURE,
-    mechanism: "足が内側に倒れ込みやすく、蹴り出すときに中足部が硬い梃子に切り替わりません。親指側の列が不安定になり、母趾球にねじれる力がかかって親指が外側に押されます。また荷重時と非荷重時で寸法が変わるため、靴のサイズが決めにくい足でもあります。",
+  flat_arch: {
+    feature: "内側の縦アーチが低く、体重がかかると足が内側に倒れ込みやすい形状です。",
+    future: FLAT_ARCH_FUTURE,
+    mechanism: "足が内側に倒れ込みやすく、蹴り出すときに中足部が硬い梃子に切り替わりません。親指側の列が不安定になり、母趾球にねじれる力がかかって親指が外側に押されます。",
+  },
+  hallux_valgus: {
+    feature: "",
+    future: HALLUX_FUTURE,
+    mechanism: "靴の中で足が前に滑ると、親指が靴の先に押されて外側に曲がり、付け根が靴の内側に当たり続けます。曲がった親指は元に戻りにくく、指の付け根の幅が広がって、さらに靴に当たりやすくなります。",
   },
 };
 
@@ -190,7 +198,7 @@ const COMMON_MECHANISM =
   "靴と足の間に隙間があると、体重が踵側に移りやすくなり、足の指が浮いた状態(浮きゆび)になります。すると踵が左右に転がりやすくなり、内側の縦アーチが落ちて、親指の付け根に圧力が集中しやすくなります。";
 
 export function generateContent(sample, dx) {
-  const rig = RIGIDITY_CONTENT[dx.rigidity];
+  const diag = ["high_arch", "flat_arch", "hallux_valgus"].filter((c) => dx.positives.has(c)).map((c) => DIAGNOSIS_CONTENT[c]);
   const thk = THICKNESS_CONTENT[dx.thickness];
 
   const measurement = [["右足は", sample.right], ["左足は", sample.left]].map(
@@ -198,26 +206,26 @@ export function generateContent(sample, dx) {
       `${label} 足長${(m.length / 10).toFixed(1)}cm、足囲${Math.round(m.girth)}mm(${jisWidthCode(m.length, m.girth, sample.gender)}相当)です。`
   );
   const feature = [...measurement];
-  if (rig) feature.push(rig.feature);
+  for (const d of diag) if (d.feature) feature.push(d.feature);
   if (thk) feature.push(thk.feature);
-  if (!rig && !thk) feature.push("体質的な偏りが小さく、標準的なバランスの足です。");
+  if (!diag.length && !thk && !dx.positives.has("adducted_forefoot")) feature.push("体質的な偏りが小さく、標準的なバランスの足です。");
 
   const observed = CATEGORIES.filter((c) => dx.positives.has(c)).map((c) => CATEGORY_FINDING[c]);
 
   const seen = new Set();
   const future = [];
-  for (const [text, implied] of [...(rig?.future ?? []), ...(thk?.future ?? [])]) {
+  for (const [text, implied] of [...diag.flatMap((d) => d.future), ...(thk?.future ?? [])]) {
     if (implied && dx.positives.has(implied)) continue;
     if (!seen.has(text)) { seen.add(text); future.push(text); }
   }
 
   const mechanism = [COMMON_MECHANISM];
-  if (rig) mechanism.push(rig.mechanism);
+  for (const d of diag) mechanism.push(d.mechanism);
   if (thk) mechanism.push(thk.mechanism);
 
   const guidance = ["靴選びは踵から始まり踵に終わる、と言われます。踵がしっかり固定される靴を選び、紐やベルトは毎回きちんと締めましょう。"];
-  if (dx.rigidity === "soft")
-    guidance.push("座って測った寸法より、歩いているときの足はひとまわり大きくなります。ウィズは実測値ちょうどではなく、締め具合を調整できる紐靴を選ぶことが特に重要です。");
+  if (dx.positives.has("flat_arch") || dx.positives.has("hallux_valgus"))
+    guidance.push("足が靴の中で動かないよう、締め具合を調整できる紐靴を選ぶことが特に重要です。");
   if (dx.thickness === "thick")
     guidance.push("甲が高く足囲が大きいため、ウィズの大きい靴、または甲の締め具合を調整できる構造(紐・ベルト)が必要です。長さだけで選ぶと甲が圧迫されます。");
   if (dx.thickness === "thin")
@@ -232,5 +240,4 @@ export function generateContent(sample, dx) {
   return { feature, observed, future, mechanism, guidance, customReasons };
 }
 
-export const RIGIDITY_LABEL = { stiff: "かたい足", soft: "やわらかい足", standard: "標準" };
 export const THICKNESS_LABEL = { thick: "あつい足", thin: "うすい足", standard: "標準" };

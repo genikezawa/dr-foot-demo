@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "./vendor/OrbitControls.js";
 import {
-  CATEGORIES, CATEGORY_LABEL, SUSPECT_ONLY, THRESHOLD, RIGIDITY_LABEL, THICKNESS_LABEL,
+  CATEGORIES, CATEGORY_LABEL, SUSPECT_ONLY, THRESHOLD, THICKNESS_LABEL,
   combine, generateContent, jisWidthCode,
 } from "./diagnosis.js";
 
@@ -106,14 +106,13 @@ function recommendedSize() {
 }
 
 function recommendedDesign() {
-  if (dx.thickness === "thick" || dx.rigidity === "soft") return "derby";
-  if (dx.thickness === "thin" || dx.rigidity === "stiff") return "walking";
+  if (dx.thickness === "thick" || dx.positives.has("flat_arch") || dx.positives.has("hallux_valgus")) return "derby";
+  if (dx.thickness === "thin" || dx.positives.has("high_arch")) return "walking";
   return "derby";
 }
 
 function footType() {
-  return [dx.rigidity, dx.thickness].filter((a) => a !== "standard")
-    .map((a) => (RIGIDITY_LABEL[a] ?? THICKNESS_LABEL[a]).replace("足", "")).join("・") || "標準";
+  return dx.thickness === "standard" ? "標準" : THICKNESS_LABEL[dx.thickness].replace("足", "");
 }
 
 function selectSample(i) {
@@ -231,31 +230,14 @@ function renderResult() {
     </div>`;
   }).join("");
 
-  // 体質マップ: 横=剛性(かたい↔やわらかい)、縦=厚み(あつい↑ うすい↓)
-  const cols = ["stiff", "standard", "soft"];
-  const rows = ["thick", "standard", "thin"];
-  const names = {
-    "thick-stiff": "かたく<br>あつい", "thick-standard": "あつい", "thick-soft": "やわらかく<br>あつい",
-    "standard-stiff": "かたい", "standard-standard": "標準", "standard-soft": "やわらかい",
-    "thin-stiff": "かたく<br>うすい", "thin-standard": "うすい", "thin-soft": "やわらかく<br>うすい",
-  };
-  const axisLabel = ["あつい", "", "うすい"];
-  let html = "";
-  rows.forEach((r, ri) => {
-    html += `<div class="axis-y">${axisLabel[ri]}</div>`;
-    cols.forEach((c) => {
-      const on = dx.rigidity === c && dx.thickness === r;
-      html += `<div class="cell${on ? " on" : ""}">${names[`${r}-${c}`]}</div>`;
-    });
-  });
-  html += `<div></div><div class="axis-x">かたい</div><div class="axis-x">← 剛性 →</div><div class="axis-x">やわらかい</div>`;
+  // 体質マップ: 縦=厚み(あつい↑ うすい↓)の1軸
+  const rows = [["thick", "あつい"], ["standard", "標準"], ["thin", "うすい"]];
+  const html = rows.map(([r, name]) => `<div class="cell${dx.thickness === r ? " on" : ""}">${name}</div>`).join("");
   $("const-grid").innerHTML = html;
 
-  const parts = [];
-  if (dx.rigidity !== "standard") parts.push(RIGIDITY_LABEL[dx.rigidity]);
-  if (dx.thickness !== "standard") parts.push(THICKNESS_LABEL[dx.thickness]);
-  $("const-summary").innerHTML = parts.length
-    ? `あなたは<b>「${parts.join("・")}」</b>タイプです。${esc(content.feature.slice(2).join(""))}`
+  const thkFeature = dx.thickness === "standard" ? "" : esc(content.feature.at(-1));
+  $("const-summary").innerHTML = dx.thickness !== "standard"
+    ? `あなたは<b>「${THICKNESS_LABEL[dx.thickness]}」</b>タイプです。${thkFeature}`
     : `あなたは<b>標準</b>タイプです。体質的な偏りが小さく、標準的なバランスの足です。`;
 }
 
@@ -290,7 +272,7 @@ function renderReport() {
     </div>
     <div class="block">
       <p class="block-num">03</p>
-      <h2 class="block-title">なぜそうなるのか</h2>
+      <h2 class="block-title">なぜ足に負担がかかるのか</h2>
       ${content.mechanism.map((t) => `<p>${esc(t)}</p>`).join("")}
     </div>
     <div class="block">

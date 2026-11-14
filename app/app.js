@@ -256,7 +256,7 @@ function renderResult() {
       if (!t && !g) return "標準";
       if (!t) return g;
       if (!g) return t;
-      return `${g}く<br>${t}`;
+      return `${c === "stiff" ? "かたく" : "やわらかく"}<br>${t}`;
     };
     const onCol = td.stiff ? "stiff" : "standard";
     grid.innerHTML = rows.map((r) => cols.map((c) =>

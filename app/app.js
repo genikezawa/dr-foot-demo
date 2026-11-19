@@ -12,8 +12,8 @@ const SAMPLES = [
     name: "サンプルA",
     tag: "女性 23.6cm",
     gender: "female",
-    right: { length: 236, width: 98, girth: 222, prob: { hallux_valgus: 0.71, flat_arch: 0.66, high_arch: 0.05, adducted_forefoot: 0.18 } },
-    left: { length: 233, width: 97, girth: 221, prob: { hallux_valgus: 0.38, flat_arch: 0.72, high_arch: 0.04, adducted_forefoot: 0.11 } },
+    right: { length: 236, width: 98, girth: 222, prob: { hallux_valgus: 0.91, flat_arch: 0.84, high_arch: 0.05, adducted_forefoot: 0.18 } },
+    left: { length: 233, width: 97, girth: 221, prob: { hallux_valgus: 0.38, flat_arch: 0.86, high_arch: 0.04, adducted_forefoot: 0.11 } },
   },
   {
     name: "サンプルB",
@@ -26,8 +26,8 @@ const SAMPLES = [
     name: "サンプルC",
     tag: "男性 25.5cm",
     gender: "male",
-    right: { length: 252, width: 101, girth: 241, prob: { hallux_valgus: 0.22, flat_arch: 0.31, high_arch: 0.12, adducted_forefoot: 0.63 } },
-    left: { length: 255, width: 102, girth: 244, prob: { hallux_valgus: 0.26, flat_arch: 0.35, high_arch: 0.09, adducted_forefoot: 0.44 } },
+    right: { length: 252, width: 101, girth: 241, prob: { hallux_valgus: 0.22, flat_arch: 0.31, high_arch: 0.12, adducted_forefoot: 0.92 } },
+    left: { length: 255, width: 102, girth: 244, prob: { hallux_valgus: 0.26, flat_arch: 0.35, high_arch: 0.09, adducted_forefoot: 0.78 } },
   },
   {
     name: "サンプルD",

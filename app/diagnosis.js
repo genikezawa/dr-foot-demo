@@ -12,7 +12,8 @@ export const CATEGORY_LABEL = {
 };
 
 // 本番の判定閾値(DiagnosisInferenceEngine と同じ)
-export const THRESHOLD = { hallux_valgus: 0.5, flat_arch: 0.6, high_arch: 0.5, adducted_forefoot: 0.5 };
+// 2026-11-20: アプリ(FootScanner)のメッシュDNN閾値に揃えた(PCA当てはめ(fit)の再構成、TypeData 1148件の5分割評価)。
+export const THRESHOLD = { hallux_valgus: 0.82, flat_arch: 0.656, high_arch: 0.473, adducted_forefoot: 0.851 };
 
 // 断定を避けて「疑い」と表記するカテゴリ
 export const SUSPECT_ONLY = new Set(["hallux_valgus", "adducted_forefoot"]);
